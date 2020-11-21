@@ -8,8 +8,8 @@ object CriticalPath {
   //TODO: Implement this...
   // Takes in java list to simplify integration
   def findCriticalPath[T, Q](startPoint: T, taskIDNetwork: DAG[T], idToTaskMap: Function[T, TasksModel]): java.util.List[(T, Set[T])] = {
-//        taskIDNetwork.print_map()
-    //    taskIDNetwork.print_dependency_lines(startPoint)
+    // Prevent crash when startPoint not in the existing network.
+    if(!taskIDNetwork.hasTask(startPoint)) return new util.ArrayList[(T, Set[T])]()
 
 
     // This needs to be more efficient, this would touch every node once for itself then once for every parent

@@ -26,12 +26,14 @@ public class TasksModel {
     private Boolean completed;
     private Float duration;
     private List<String> children;
+    private String id;
 
-    public TasksModel(String title, boolean completed, float duration, List<String> children) {
+    public TasksModel(String title, boolean completed, float duration, List<String> children, String id) {
         this.title = title;
         this.completed = completed;
         this.duration = duration;
         this.children = children;
+        this.id = id;
     }
 
     // Needed to access in scala -- It will not compile with these being only available at compile-time
@@ -42,5 +44,6 @@ public class TasksModel {
         return title;
     }
     public List<String> getChildren() { return children; }
+    public String getId() {return id;}
 
 }
