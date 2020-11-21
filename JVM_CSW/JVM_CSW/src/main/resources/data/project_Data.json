@@ -1,4 +1,5 @@
 [
-  {"title":  "one", "completed":  true
+  {
+    "title":  "one", "completed":  true, "duration": 1.0
   }
 ]

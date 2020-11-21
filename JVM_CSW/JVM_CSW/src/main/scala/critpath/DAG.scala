@@ -1,4 +1,4 @@
-package CriticalPath
+package critpath
 
 import scala.collection.immutable.HashMap
 
@@ -8,7 +8,7 @@ import scala.collection.immutable.HashMap
 // NodeType will be a scala implementation of the task data container, the conversion occurs in extend(List[TasksModel])
 class DAG[NodeType](val local_map: HashMap[NodeType, Set[NodeType]]) {
 
-  // Creates a DAG containing all data from both this is being called on.
+  // Creates a critpath.DAG containing all data from both this is being called on.
   def join(other: DAG[NodeType]): DAG[NodeType] = {
     require(other != null)
 
@@ -16,9 +16,9 @@ class DAG[NodeType](val local_map: HashMap[NodeType, Set[NodeType]]) {
     //with immutable maps
     val tmp = new scala.collection.mutable.HashMap[NodeType, Set[NodeType]]
     // Place all items in both maps into the tmp map
-    other.local_map
-      .filter(node => local_map.contains(node._1))
-      .foreach(node => tmp.put(node._1, node._2 ++ local_map.getOrElse(node._1, Set())))
+    local_map
+      .filter(node => other.hasTask(node._1))
+      .foreach(node => tmp.put(node._1, node._2 ++ other.getChildren(node._1)))
 
     // Place all items in only the other map into the tmp map
     other.local_map
@@ -42,6 +42,9 @@ class DAG[NodeType](val local_map: HashMap[NodeType, Set[NodeType]]) {
     val tmp_dep = local_map.getOrElse(item, Set()) ++ dependencies
     new DAG[NodeType](local_map.updated(item, tmp_dep))
   }
+
+  def getChildren(item: NodeType) : Set[NodeType] = local_map.getOrElse(item, Set())
+  def hasTask(item: NodeType) : Boolean = local_map.contains(item)
 
   def print_map(): Unit = {
     local_map.foreachEntry((k, e) => println("Key:", k, ";Entry:", e))
@@ -86,7 +89,7 @@ object DAG {
 
 }
 
-//val d = DAG[Int](0, Set.empty)
+//val d = critpath.DAG[Int](0, Set.empty)
 //d.extend(10, Set(10, 10, 5, 4))
-//val a = DAG[Int](0, Set.empty)
+//val a = critpath.DAG[Int](0, Set.empty)
 //val g = a.join(d)

@@ -22,10 +22,21 @@ public class TasksModel {
     
     private String title;
     private Boolean completed;
+    private Float duration;
 
-    public TasksModel(String title, boolean completed) {
+    public TasksModel(String title, boolean completed, float duration) {
         this.title = title;
         this.completed = completed;
+        this.duration = duration;
     }
-    
+
+    // Needed to access in scala -- It will not compile with these being only available at compile-time
+    public Float getDuration() {
+        return duration;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
 }

@@ -1,4 +1,4 @@
-package CriticalPath
+package critpath
 
 object Test {
 
