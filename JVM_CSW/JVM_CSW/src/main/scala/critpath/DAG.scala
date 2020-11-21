@@ -6,9 +6,23 @@ import scala.collection.immutable.HashMap
 // Inheritance of the immutable form of HashMap is disallowed, due to it being final.
 // Join and Extend are the only formally accepted functions
 // NodeType will be a scala implementation of the task data container, the conversion occurs in extend(List[TasksModel])
+/**
+ * Directional Analytical Graph
+ *
+ * @param local_map The base map this graph is built on, this is assumed to be correct
+ *
+ * @tparam NodeType The type of the taskIDs stored in this graph
+ */
 class DAG[NodeType](val local_map: HashMap[NodeType, Set[NodeType]]) {
 
-  // Creates a critpath.DAG containing all data from both this is being called on.
+  /**
+   * Created a new DAG containing the data from both this and the provided graph.
+   * Tasks with conflicting ids are assumed to be referring to the same task and as such are merged together.
+   *
+   * @param other The other graph to pull from
+   *
+   * @return The DAG containing all values
+   */
   def join(other: DAG[NodeType]): DAG[NodeType] = {
     require(other != null)
 
@@ -34,62 +48,72 @@ class DAG[NodeType](val local_map: HashMap[NodeType, Set[NodeType]]) {
     new DAG[NodeType](new HashMap[NodeType, Set[NodeType]] ++ tmp.toMap)
   }
 
-  // Adds a single item, and it's dependencies (what's required for it to be completed)
-  def extend(item: NodeType, dependencies: Set[NodeType]) : DAG[NodeType] = {
+  /**
+   * Extends the graph by a single item
+   *
+   * @param item The item being added
+   * @param children The children of the item being added
+   *
+   * @return A new graph containing the new item in addition to the old graph data
+   */
+  def extend(item: NodeType, children: Set[NodeType]) : DAG[NodeType] = {
     require(item != null)
-    require(dependencies != null)
+    require(children != null)
     // For logical consistency, add the dependencies to the existing ones
-    val tmp_dep = local_map.getOrElse(item, Set()) ++ dependencies
+    val tmp_dep = local_map.getOrElse(item, Set()) ++ children
     new DAG[NodeType](local_map.updated(item, tmp_dep))
   }
 
+  /**
+   * Gets the children of a given task
+   *
+   * @param item The task being queried
+   *
+   * @return The set of taskIDs
+   */
   def getChildren(item: NodeType) : Set[NodeType] = local_map.getOrElse(item, Set())
+
+  /**
+   * Returns if the task exists
+   *
+   * @param item The task being queried
+   *
+   * @return True if it exists and False otherwise
+   */
   def hasTask(item: NodeType) : Boolean = local_map.contains(item)
 
+  /**
+   * Prints the contents of the local_map
+   */
   def print_map(): Unit = {
     local_map.foreachEntry((k, e) => println("Key:", k, ";Entry:", e))
   }
 
+  /**
+   * Prints all dependencies of the start_point in the local_map
+   *
+   * @param start_point The point to start with
+   */
   def print_dependency_lines(start_point: NodeType): Unit = {
     require(local_map.contains(start_point))
     var deps = Set(start_point)
-//    print("Start Point: ", start_point)
     local_map.getOrElse(start_point, Set()).foreach(item => deps = deps + item)
     print("Start At", deps.slice(0, 1), deps.slice(1, deps.size))
   }
 
 }
 
+/**
+ * Companion object for the DAG class
+ */
 object DAG {
   // Feels like I've done this wrong, but not sure how to do otherwise.
+  /**
+   * Constructs an empty DAG
+   *
+   * @tparam T The type of the DAG
+   *
+   * @return The empty DAG
+   */
   def empty[T] = new DAG[T](new HashMap[T, Set[T]]())
-
-  def test(): Unit = {
-    val t_1 = empty[Int]
-    println("t_1")
-//    t_1.print_map()
-    val t_2 = empty[Int]
-    println("t_2")
-//    t_2.print_map()
-
-    val a = t_1.extend(0, Set(1, 2))
-//    a.print()
-    val b = a.extend(1, Set(2))
-//    b.print()
-
-    val c = b.extend(2, Set())
-//    b.print()
-    val d = a.join(c)
-//    d.print_map()
-    d.extend(2, Set(5)).print_map()
-
-    d.print_dependency_lines(0)
-
-  }
-
 }
-
-//val d = critpath.DAG[Int](0, Set.empty)
-//d.extend(10, Set(10, 10, 5, 4))
-//val a = critpath.DAG[Int](0, Set.empty)
-//val g = a.join(d)
