@@ -7,6 +7,8 @@ package Main;
 
 import java.net.URL;
 
+import CriticalPath.DAG;
+import CriticalPath.Test;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,6 +29,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        // Sticking some Scala tests here for intergration
+        Test.some_function();
+        // End Scala testing
 
         URL path = getClass().getResource(Constants.FXML_HOME);
         if (path != null) {
@@ -61,7 +67,6 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-
     }
 
 

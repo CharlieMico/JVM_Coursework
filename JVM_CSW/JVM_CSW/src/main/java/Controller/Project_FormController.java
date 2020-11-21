@@ -42,7 +42,7 @@ public class Project_FormController implements Initializable {
     private Button SaveButton;
 
     @FXML
-    private Label lbl_Missing_Info;
+    private Label lbl_Missing_Info; // TODO: Make sure this is assigned a value at some point
 
     @FXML
     private Button HomeButton;
