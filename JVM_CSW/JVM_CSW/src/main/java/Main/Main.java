@@ -21,10 +21,7 @@ import scala.Tuple2;
 import scala.collection.immutable.Set;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Too
@@ -41,11 +38,11 @@ public class Main extends Application {
         // Sticking some Scala tests here for intergration
         Map<String, TasksModel> task_map = new HashMap<>();
         // Needs moving to kotlin for loading the data (spec calls for kotlin to handle persistance)
-        task_map.put("Task 0", new TasksModel("Task 0", true, 1));
-        task_map.put("Task 1", new TasksModel("Task 1", false, 2));
-        task_map.put("Task 2", new TasksModel("Task 2", false, 1));
-        task_map.put("Task 3", new TasksModel("Task 3", false, 15));
-        task_map.put("Task 10", new TasksModel("Task 10", false, 2));
+        task_map.put("Task 0",  new TasksModel("Task 0", true, 1, new ArrayList<>()));
+        task_map.put("Task 1",  new TasksModel("Task 1", false, 2, new ArrayList<>()));
+        task_map.put("Task 2",  new TasksModel("Task 2", false, 1, new ArrayList<>()));
+        task_map.put("Task 3",  new TasksModel("Task 3", false, 15, new ArrayList<>()));
+        task_map.put("Task 10", new TasksModel("Task 10", false, 2, new ArrayList<>()));
         // Might want to merge these later, but for now this is fine
         Map<String, List<String>> task_relation = new HashMap<>();
         task_relation.put("Task 0", Arrays.asList("Task 1", "Task 2", "Task 10"));

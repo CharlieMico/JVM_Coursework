@@ -1,5 +1,8 @@
 [
-  {
-    "title":  "one", "completed":  true, "duration": 1.0
-  }
+  { "title":  "task_1", "completed":  true,  "duration":  1.0, "children": ["task_2", "task_3"] },
+  { "title":  "task_2", "completed":  false, "duration":  2.0, "children": ["task_4"] },
+  { "title":  "task_3", "completed":  false, "duration":  1.0, "children": ["task_5"] },
+  { "title":  "task_4", "completed":  false, "duration":  1.0, "children": ["task_5"] },
+  { "title":  "task_5", "completed":  false, "duration":  1.0, "children": ["task_6"] },
+  { "title":  "task_6", "completed":  false, "duration": 10.0, "children": [] }
 ]

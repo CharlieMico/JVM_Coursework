@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  *
  * @author Too
@@ -23,20 +25,22 @@ public class TasksModel {
     private String title;
     private Boolean completed;
     private Float duration;
+    private List<String> children;
 
-    public TasksModel(String title, boolean completed, float duration) {
+    public TasksModel(String title, boolean completed, float duration, List<String> children) {
         this.title = title;
         this.completed = completed;
         this.duration = duration;
+        this.children = children;
     }
 
     // Needed to access in scala -- It will not compile with these being only available at compile-time
     public Float getDuration() {
         return duration;
     }
-
     public String getTitle() {
         return title;
     }
+    public List<String> getChildren() { return children; }
 
 }
