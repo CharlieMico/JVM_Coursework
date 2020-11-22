@@ -15,13 +15,15 @@ object CriticalPath {
    * @param startPoint The point in the network to start calculating from
    * @param taskIDNetwork The network as whole
    * @param idToTaskMap A function to convert from a taskID to a given task
+   * @param taskToDuration A function mapping from a task to it's duration
+   *                       (keeps the scala apart from the specifics of data storage)
    *
    * @tparam T The type of the taskIDs
    * @tparam Q The type of the task itself
    *
    * @return A list of tuples containing both the startPoint and a Set containing the path making up the critical path
    */
-  def findCriticalPath[T, Q](startPoint: T, taskIDNetwork: DAG[T], idToTaskMap: Function[T, TasksModel]): java.util.List[(T, Set[T])] = {
+  def findCriticalPath[T, Q](startPoint: T, taskIDNetwork: DAG[T], idToTaskMap: Function[T, Q], taskToDuration: Function[Q, Float]): java.util.List[(T, Set[T])] = {
     if(!taskIDNetwork.hasTask(startPoint)) return new util.ArrayList[(T, Set[T])]()
 
     // This needs to be more efficient, this would touch every node once for itself then once for every parent
@@ -37,7 +39,7 @@ object CriticalPath {
       if(tasks.isEmpty) 0
       else {
         tasks.map(
-          e => idToTaskMap(e).getDuration + get_total_duration(taskIDNetwork.getChildren(e))
+          e => taskToDuration(idToTaskMap(e)) + get_total_duration(taskIDNetwork.getChildren(e))
         ).sum
       }
     }

@@ -115,11 +115,12 @@ public class Main extends Application {
 
             criticalPath = CriticalPath.findCriticalPath("task_1",
                     stringDAG,
-                    task_map::get
+                    task_map::get,
+                    TasksModel::getDuration
             );
 
             // -- MINIMUM LINE FOR SCALA INTEGRATION -- \\
-            // List<Tuple2<String, Set<String>>> path = CriticalPath.findCriticalPath("Task 0", CriticalPath.makeDAG(task_relation), (String task_id) -> task_map.get(task_id));
+            // List<Tuple2<String, Set<String>>> path = CriticalPath.findCriticalPath("Task 0", CriticalPath.makeDAG(task_relation), (String task_id) -> task_map.get(task_id), (TasksModel m) -> m.getDuration());
 
             // Just printing the CriticalPath found.
             for (Tuple2<String, Set<String>> item : criticalPath) {
