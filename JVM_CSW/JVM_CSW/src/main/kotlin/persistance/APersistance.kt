@@ -14,19 +14,30 @@ import kotlin.io.path.createFile
 import kotlin.io.path.exists
 
 abstract class APersistance() {
-    abstract fun <T> save(url: String, data: T): Boolean
-    abstract fun <T> load(url: String) : T?
+    protected abstract fun <T> save(url: String, data: T): Boolean
+    protected abstract fun <T> load(url: String) : T?
 }
 
 @ExperimentalPathApi
-class FilePersistance() : APersistance() {
+class FilePersistence() : APersistance() {
 
-    override fun <T> save(file_path: String, data: T) : Boolean {
-        return writeJson(file_path, object: TypeToken<T>(){}, data);
+    private val taskToken : TypeToken<List<Task>> = object: TypeToken<List<Task>>(){}
+    private val projectToken : TypeToken<List<ProjectFactory>> = object: TypeToken<List<ProjectFactory>>(){}
+
+    fun saveTasks(file_path: String, data: List<Task>) : Boolean = writeJson(file_path, taskToken, data)
+    fun loadTasks(file_path: String) : List<Task> = readJson(file_path, taskToken) ?: emptyList()
+
+    fun saveProjects(file_path: String, data: List<ProjectFactory>) : Boolean = writeJson(file_path, projectToken, data)
+    fun loadProjects(file_path: String) : List<ProjectFactory> = readJson(file_path, projectToken) ?: emptyList()
+
+
+
+    override fun <T> save(url: String, data: T) : Boolean {
+        return writeJson(url,  object: TypeToken<T>(){}, data);
     }
 
-    override fun <T> load(file_path: String) : T? {
-        return readJson(file_path, object: TypeToken<T>(){})
+    override fun <T> load(url: String) : T? {
+        return readJson(url, object: TypeToken<T>(){})
     }
 
 
@@ -38,14 +49,13 @@ class FilePersistance() : APersistance() {
         return Gson().fromJson(reader, token.type)
     }
 
-    private fun <T> writeJson(file_path: String, token: TypeToken<T>, list: T) : Boolean {
+    private fun <T> writeJson(file_path: String, token: TypeToken<T>, data: T) : Boolean {
         val path = Path(file_path)
         if(!path.exists()) path.createFile()
         val writer : BufferedWriter = BufferedWriter(FileWriter(path.toFile()))
-        writer.write(Gson().toJson(list))
+        writer.write(Gson().toJson(data))
         writer.flush()
         writer.close()
         return false
     }
-
 }

@@ -5,9 +5,6 @@
  */
 package main;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import critical_path.TaskDAG;
 import critpath.CriticalPath;
 import critpath.DAG;
@@ -18,16 +15,14 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import kotlin.jvm.internal.markers.KMutableSet;
 import model.ProjectFactory;
 import model.Task;
-import persistance.FilePersistance;
+import persistance.APersistance;
+import persistance.FilePersistence;
 import scala.Tuple2;
 import scala.collection.immutable.Set;
 import utils.Constants;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -91,16 +86,8 @@ public class Main extends Application {
     private void testScala() {
         // Load, copyed from HomeController.fetchList
         System.out.println("Scala Test Start");
-        List<Task> list = null;
-        try {
-            BufferedReader url = new BufferedReader(new FileReader(Constants.TASK_FOLDER + "/UNQIUE_PROJECT_IDENTIFIER.json"));
-            System.out.println(url);
-            list = new Gson().fromJson(url, new TypeToken<List<Task>>() {
-            }.getType());
-            System.out.println(list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        FilePersistence f = new FilePersistence();
+        List<Task> list = f.loadTasks(Constants.TASK_FOLDER + "/tmpfile.json");
         // Abandon ship if this data doesn't exist for whatever reason
         if(list != null) {
             // Translating from a single list to the Maps expected by the CriticalPath implementation
@@ -145,26 +132,15 @@ public class Main extends Application {
 
     private void testKotlin() {
         System.out.println("Kotlin Critical Path Testing START");
-//        FilePersistance file = new FilePersistance();
-//        List<Task> list = null;
-//        try {
-//            BufferedReader url = new BufferedReader(new FileReader(Constants.TASK_FOLDER + "/UNQIUE_PROJECT_IDENTIFIER.json"));
-//            System.out.println(url);
-//            list = new Gson().fromJson(url, new TypeToken<List<Task>>() {
-//            }.getType());
-//            System.out.println(list);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        FilePersistance files = new FilePersistance();
+        FilePersistence files = new FilePersistence();
 
-        List<Task> list = files.load(Constants.TASK_FOLDER + "/tmpfile.json");
-        files.save(Constants.TASK_FOLDER + "/tmpfile2.json", list);
+        List<Task> list = files.loadTasks(Constants.TASK_FOLDER + "/tmpfile.json");
+        files.saveTasks(Constants.TASK_FOLDER + "/tmpfile2.json", list);
 
-        List<ProjectFactory> pTmp = files.load(Constants.PROJECTS_DATA);
-        files.save(Constants.TASK_FOLDER + "/tmpfile3.json", pTmp);
+        List<ProjectFactory> pTmp = files.loadProjects(Constants.PROJECTS_DATA);
+        files.saveProjects(Constants.TASK_FOLDER + "/tmpfile3.json", pTmp);
 
-//        List<ProjectFactory> pList = files.load_projects()
+        List<ProjectFactory> pList = files.loadProjects(Constants.PROJECTS_DATA);
 
 
         TaskDAG taskDAG = new TaskDAG(list);
