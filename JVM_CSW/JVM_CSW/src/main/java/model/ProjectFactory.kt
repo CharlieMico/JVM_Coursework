@@ -19,3 +19,10 @@ import lombok.ToString
 @NoArgsConstructor
 @ToString
 class ProjectFactory(val name: String, val status: Boolean, val email: String,val tlf: String,val teamLeader: String,val deadline: String)
+
+
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+data class Task(val id: String, val title: String, val completed: Boolean, val duration: Float, val children: List<String>)

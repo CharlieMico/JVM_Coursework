@@ -84,15 +84,14 @@ public class Main extends Application {
      */
     private void testScala() {
         // Load, copyed from HomeController.fetchList
+        System.out.println("Scala Test Start");
         List<Task> list = null;
         try {
-            BufferedReader url = new BufferedReader(new FileReader(Constants.TASK_FOLDER + "/UNIQUE_PROJECT_IDENTIFIER.json"));
+            BufferedReader url = new BufferedReader(new FileReader(Constants.TASK_FOLDER + "/UNQIUE_PROJECT_IDENTIFIER.json"));
             System.out.println(url);
             list = new Gson().fromJson(url, new TypeToken<List<Task>>() {
             }.getType());
-
-
-
+            System.out.println(list);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -106,17 +105,20 @@ public class Main extends Application {
                 task_map.put(task.getId(), task);
                 task_relation.put(task.getId(), task.getChildren());
             });
+            System.out.println(task_relation);
             // End Translating
 
             // Broken down for ease of reading
             DAG<String> stringDAG = CriticalPath.makeDAG(task_relation);
             List<Tuple2<String, Set<String>>> criticalPath;
 
-            criticalPath = CriticalPath.findCriticalPath("task_0",
+            criticalPath = CriticalPath.findCriticalPath("task_1",
                     stringDAG,
                     task_map::get,
                     Task::getDuration
             );
+
+            System.out.println(criticalPath);
 
             // -- MINIMUM LINE FOR SCALA INTEGRATION -- \\
             // List<Tuple2<String, Set<String>>> path = CriticalPath.findCriticalPath("Task 0", CriticalPath.makeDAG(task_relation), (String task_id) -> task_map.get(task_id), (TasksModel m) -> m.getDuration());
@@ -131,6 +133,7 @@ public class Main extends Application {
                 );
                 System.out.println("[END]");
             }
-        }
+        } else System.err.println("File not properally loaded");
+        System.out.println("Scala Test End");
     }
 }
