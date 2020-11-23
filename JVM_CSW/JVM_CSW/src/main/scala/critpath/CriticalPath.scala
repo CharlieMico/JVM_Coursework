@@ -7,8 +7,6 @@ import Model.TasksModel
  * This object is the point of entry for Java Applications to hook into.
  */
 object CriticalPath {
-  //TODO: Implement this...
-  // Takes in java list to simplify integration
   /**
    * Finds the critical path of the given network of tasks
    *
