@@ -1,10 +1,1 @@
-[
-  {"name":"jose","status":true,"email":"jose@","tlf":"112242","teamLeader":"jose ","deadline":"2020-11-27"},
-  {"name":"jose","status":true,"email":"asdfasf","tlf":"afsfafafa","teamLeader":"adasd","deadline":"2020-12-05"},
-  {"name":"DIJOGiopdjgiopje","status":true,"email":"jeajhRWE","tlf":"hehre","teamLeader":"whrqetjt","deadline":"2020-11-15"},
-  {"name":"kkkkk","status":true,"email":"ffffff","tlf":"fffffff","teamLeader":"fdfff","deadline":"2020-11-28"},
-  {"name":"joo","status":true,"email":"hhhhh","tlf":"hhhhh","teamLeader":"faasa","deadline":"2020-11-29"},
-  {"name":"this","status":true,"email":"a","tlf":"new","teamLeader":"is","deadline":"2020-11-07"},
-  {"name":"new","status":true,"email":"hello","tlf":"world","teamLeader":"project ","deadline":"2020-11-13"},
-  {"name":"jose","status":true,"email":"kppkklpl","tlf":"uogoguhuhoi","teamLeader":"jjojojj","deadline":"2020-11-23"}
-]
+[{"name":"jose","status":true,"email":"jose@","tlf":"112242","teamLeader":"jose ","deadline":"2020-11-27"},{"name":"jose","status":true,"email":"asdfasf","tlf":"afsfafafa","teamLeader":"adasd","deadline":"2020-12-05"},{"name":"DIJOGiopdjgiopje","status":true,"email":"jeajhRWE","tlf":"hehre","teamLeader":"whrqetjt","deadline":"2020-11-15"},{"name":"kkkkk","status":true,"email":"ffffff","tlf":"fffffff","teamLeader":"fdfff","deadline":"2020-11-28"},{"name":"joo","status":true,"email":"hhhhh","tlf":"hhhhh","teamLeader":"faasa","deadline":"2020-11-29"},{"name":"this","status":true,"email":"a","tlf":"new","teamLeader":"is","deadline":"2020-11-07"},{"name":"new","status":true,"email":"hello","tlf":"world","teamLeader":"project ","deadline":"2020-11-13"},{"name":"jose","status":true,"email":"kppkklpl","tlf":"uogoguhuhoi","teamLeader":"jjojojj","deadline":"2020-11-23"},{"name":"awdawd","status":true,"email":"WDAWDAWD","tlf":"AWDAWDAWWD","teamLeader":"awdawdawd","deadline":"2020-11-22"}]

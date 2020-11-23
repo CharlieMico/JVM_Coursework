@@ -108,8 +108,7 @@ public class Project_FormController implements Initializable {
 
             ProjectFactory factory = new ProjectFactory(ProjectName.getText(),true,Email.getText(),PhoneNumberTxt.getText(),TeamLeader.getText(),Deadline.getValue().toString());
             BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-            list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
-            }.getType());
+            list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() { }.getType());
             list.add(factory);
             Gson gson = new Gson();
 
