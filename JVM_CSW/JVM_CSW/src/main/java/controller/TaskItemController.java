@@ -17,7 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import Utils.Constants;
+import utils.Constants;
 
 /**
  * FXML Controller class
