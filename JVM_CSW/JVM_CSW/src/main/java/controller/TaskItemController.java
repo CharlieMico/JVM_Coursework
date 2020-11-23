@@ -17,7 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import utils.Constants;
+import Utils.Constants;
 
 /**
  * FXML Controller class
@@ -50,7 +50,7 @@ public class TaskItemController implements Initializable {
 
     /**
      * Initializes the controller class.
-     * some meaningless change
+     *
      * @param url
      * @param rb
      */

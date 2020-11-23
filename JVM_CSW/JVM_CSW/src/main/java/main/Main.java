@@ -5,18 +5,8 @@
  */
 package main;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import critpath.CriticalPath;
-import critpath.DAG;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,10 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import model.ProjectFactory;
-import scala.Tuple2;
-import scala.collection.immutable.Set;
-import utils.Constants;
+import Utils.Constants;
 
 /**
  * @author Too
@@ -77,61 +64,5 @@ public class Main extends Application {
 
     }
 
-    /**
-     * Tests the scala implementation before integrating into the core application, loads and then finds the critical
-     * path of the data stored at ./src/main/resources/data/project_Data.json relative to the project root.
-     */
-    private void testScala() {
-        // Load, copyed from HomeController.fetchList
-        List<ProjectFactory> list = null;
-        try {
-
-            BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-            System.out.println(url);
-            list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
-            }.getType());
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Abandon ship if this data doesn't exist for whatever reason
-        if(list != null) {
-            // Translating from a single list to the Maps expected by the CriticalPath implementation
-            // Any map is valid, HashMaps used primarily for ease of typing due to muscle memory.
-            Map<String, ProjectFactory> task_map = new HashMap<>();
-            Map<String, List<String>> task_relation = new HashMap<>();
-            list.forEach(task -> {
-                task_map.put(task.getName(), task);
-                task_relation.put(task.getName(), new ArrayList<>());
-            });
-            // End Translating
-
-            // Broken down for ease of reading
-            DAG<String> stringDAG = CriticalPath.makeDAG(task_relation);
-            List<Tuple2<String, Set<String>>> criticalPath;
-
-            criticalPath = CriticalPath.findCriticalPath("task_1",
-                    stringDAG,
-                    task_map::get,
-                    x -> 0//
-            );
-
-            // -- MINIMUM LINE FOR SCALA INTEGRATION -- \\
-            // List<Tuple2<String, Set<String>>> path = CriticalPath.findCriticalPath("Task 0", CriticalPath.makeDAG(task_relation), (String task_id) -> task_map.get(task_id), (TasksModel m) -> m.getDuration());
-
-            // Just printing the CriticalPath found.
-            for (Tuple2<String, Set<String>> item : criticalPath) {
-                System.out.print("Start Point: " + item._1 + ", " + item._2.size() + " Children: [START]->" + item._1 + "->");
-                item._2.foreach((e) -> {
-                            System.out.print(e + "->");
-                            return e;
-                        }
-                );
-                System.out.println("[END]");
-            }
-        }
-    }
 
 }
