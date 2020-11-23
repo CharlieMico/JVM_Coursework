@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="594.0" prefWidth="1049.0" style="-fx-background-radius: 1em;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.HomeController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1050.0" style="-fx-background-radius: 1em;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeController">
    <children>
-      <BorderPane prefHeight="594.0" prefWidth="1049.0" style="-fx-background-color: #474C5F; -fx-background-radius: 1em;">
+      <BorderPane prefHeight="600.0" prefWidth="1050.0" style="-fx-background-color: #474C5F; -fx-background-radius: 1em;">
          <center>
             <BorderPane prefHeight="584.0" prefWidth="518.0" style="-fx-background-color: #FBFCFC; -fx-background-radius: 1em;" BorderPane.alignment="CENTER">
                <top>
@@ -55,9 +55,9 @@
                <center>
                   <BorderPane prefHeight="274.0" prefWidth="542.0" BorderPane.alignment="CENTER">
                      <center>
-                        <ScrollPane prefWidth="495.0" style="-fx-border-color: #FBFCFC;">
+                        <ScrollPane prefWidth="545.0" style="-fx-border-color: #FBFCFC;">
                            <content>
-                              <VBox fx:id="vTaskItems" alignment="TOP_CENTER" prefHeight="240.0" prefWidth="525.0" style="-fx-background-color: #FBFCFC;">
+                              <VBox fx:id="vTaskItems" prefHeight="240.0" prefWidth="500.0" style="-fx-background-color: #FBFCFC;">
                                  <padding>
                                     <Insets bottom="10.0" top="10.0" />
                                  </padding>
