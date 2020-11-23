@@ -1,16 +1,13 @@
 package controller;
 
-import com.google.gson.JsonParser;
 //import org.json.*;
 
 //import com.mysql.jdbc.Connection;
 //import com.mysql.jdbc.PreparedStatement;
 
-import Utils.Constants;
+import utils.Constants;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+        import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -35,8 +32,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static Utils.Constants.FXML_HOME;
-import static Utils.Constants.PROJECTS_DATA;
+import static utils.Constants.FXML_HOME;
+import static utils.Constants.PROJECTS_DATA;
 
 public class Project_FormController implements Initializable {
 

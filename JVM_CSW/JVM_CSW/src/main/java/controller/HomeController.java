@@ -33,7 +33,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Cleanup;
-import Utils.Constants;
+import utils.Constants;
 
 
 import java.io.FileReader;
