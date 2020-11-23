@@ -7,6 +7,7 @@ package main;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import critical_path.TaskDAG;
 import critpath.CriticalPath;
 import critpath.DAG;
 import javafx.application.Application;
@@ -16,7 +17,9 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import kotlin.jvm.internal.markers.KMutableSet;
 import model.Task;
+import persistance.FilePersistance;
 import scala.Tuple2;
 import scala.collection.immutable.Set;
 import utils.Constants;
@@ -41,6 +44,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         testScala();
+        testKotlin();
 
         URL path = getClass().getResource(Constants.FXML_HOME);
         if (path != null) {
@@ -135,5 +139,32 @@ public class Main extends Application {
             }
         } else System.err.println("File not properally loaded");
         System.out.println("Scala Test End");
+    }
+
+    private void testKotlin() {
+        System.out.println("Kotlin Critical Path Testing START");
+//        FilePersistance file = new FilePersistance();
+        List<Task> list = null;
+        try {
+            BufferedReader url = new BufferedReader(new FileReader(Constants.TASK_FOLDER + "/UNQIUE_PROJECT_IDENTIFIER.json"));
+            System.out.println(url);
+            list = new Gson().fromJson(url, new TypeToken<List<Task>>() {
+            }.getType());
+            System.out.println(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(list != null) {
+            TaskDAG taskDAG = new TaskDAG(list);
+            List<Task> crit_path = taskDAG.findCriticalPath("task_1");
+
+            System.out.print("Start Point: task_1, " + crit_path.size() + " Children: [START]->");
+            for(Task t : crit_path) {
+                System.out.print(t.getId() + "->");
+            }
+            System.out.println("[END]");
+
+        }
+        System.out.println("Kotlin Critical Path Testing END");
     }
 }
