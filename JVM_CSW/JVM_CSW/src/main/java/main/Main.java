@@ -14,9 +14,11 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import critical_path.TaskDAG;
 import critpath.CriticalPath;
 import critpath.DAG;
 import javafx.application.Application;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -27,6 +29,7 @@ import Utils.Constants;
 
 import model.CriticalPathFactory;
 import model.ProjectFactory;
+import persistance.FilePersistence;
 import scala.Tuple2;
 import scala.collection.immutable.Set;
 
@@ -42,8 +45,11 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        testScala();
 
+        scalaDemo();
+        kotlinDemo();
+
+//        testScala();
         URL path = getClass().getResource(Constants.FXML_HOME);
         if (path != null) {
             Parent root = FXMLLoader.load(path);
@@ -78,6 +84,52 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
 
+    }
+
+    private void scalaDemo() {
+        System.out.println("Scala Demo Start");
+        List<CriticalPathFactory> task_list = new FilePersistence().loadTasks(Constants.PROJECTS_DATA);
+        List<ProjectFactory> project_list   = new FilePersistence().loadProjects(Constants.PROJECTS_DATA);
+
+        Map<String, CriticalPathFactory> task_map = new HashMap<>();
+        Map<String, List<String>> task_relation = new HashMap<>();
+        task_list.forEach(task -> {
+            task_map.put(task.getId(), task);
+
+            task_relation.put(task.getId(), task.getChildren());
+        });
+
+        List<Tuple2<String, Set<String>>> criticalPath = CriticalPath.findCriticalPath("task_1",
+                CriticalPath.makeDAG(task_relation),
+                task_map::get,
+                CriticalPathFactory::getDuration);
+
+        for (Tuple2<String, Set<String>> item : criticalPath) {
+            System.out.print("Start Point: " + item._1 + ", " + item._2.size() + " Children: [START]->" + item._1 + "->");
+            item._2.foreach((e) -> {
+                        System.out.print(e + "->");
+                        return e;
+                    }
+            );
+            System.out.println("[END]");
+        }
+        System.out.println("Scala Demo End");
+    }
+
+    private void kotlinDemo() {
+        System.out.println("Kotlin Demo Start");
+        List<CriticalPathFactory> task_list = new FilePersistence().loadTasks(Constants.PROJECTS_DATA);
+        List<ProjectFactory> project_list   = new FilePersistence().loadProjects(Constants.PROJECTS_DATA);
+
+        TaskDAG graph = new TaskDAG(task_list);
+        List<CriticalPathFactory> path = graph.findCriticalPath("task_1");
+
+        System.out.print("Start Point: task_1, " + path.size() + " Children: [START]->");
+        for (CriticalPathFactory node : path) {
+            System.out.print(node.getId() + "->");
+        }
+        System.out.println("[END]");
+        System.out.println("Kotlin Demo End");
     }
 
     private void testScala() {
