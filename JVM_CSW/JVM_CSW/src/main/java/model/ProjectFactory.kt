@@ -10,14 +10,11 @@ import lombok.NoArgsConstructor
 import lombok.Setter
 import lombok.ToString
 
-/**
- *
- * @author Too
- */
+
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
 class ProjectFactory(val name: String, val status: Boolean, val email: String,val tlf: String
-                     ,val teamLeader: String,val deadline: String,val id : String,val Children: String,val Duration :Float)
+                     ,val teamLeader: String,val deadline: String,val id : String,val Child: String,val children: List<String>,val Duration :Float)
 

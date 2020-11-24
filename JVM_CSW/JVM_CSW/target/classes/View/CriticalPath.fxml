@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1050.0" style="-fx-background-radius: 1em;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="1050.0" style="-fx-background-radius: 1em;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CriticalPathController">
    <children>
       <BorderPane prefHeight="600.0" prefWidth="1050.0" style="-fx-background-color: #474C5F; -fx-background-radius: 1em;">
          <center>
@@ -34,7 +35,7 @@
                <bottom>
                   <BorderPane prefHeight="167.0" prefWidth="542.0" style="-fx-background-radius: 1em; -fx-border-radius: 1em;" BorderPane.alignment="CENTER">
                      <top>
-                        <Label fx:id="lblUpcoming" text="Upcoming" BorderPane.alignment="CENTER_LEFT">
+                        <Label fx:id="lblUpcoming" text="Critical Path Display" BorderPane.alignment="CENTER_LEFT">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -44,11 +45,11 @@
                         </Label>
                      </top>
                      <center>
-                        <ScrollPane prefHeight="78.0" prefWidth="495.0" style="-fx-border-color: #FBFCFC;" BorderPane.alignment="CENTER">
-                           <content>
-                              <VBox fx:id="vTaskItemsupcoming" alignment="TOP_CENTER" prefHeight="137.0" prefWidth="520.0" style="-fx-background-color: #FBFCFC;" />
-                           </content>
-                        </ScrollPane>
+                        <TextArea fx:id="CriticalPathArea" prefHeight="200.0" prefWidth="200.0" promptText="The Critical Path will appear Here" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </TextArea>
                      </center>
                   </BorderPane>
                </bottom>
@@ -66,7 +67,7 @@
                         </ScrollPane>
                      </center>
                      <top>
-                        <Label fx:id="lblToday" text="Today" BorderPane.alignment="CENTER_LEFT">
+                        <Label fx:id="lblToday" text="ProjectList" BorderPane.alignment="CENTER_LEFT">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -96,17 +97,17 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="CreateProjectBtn" mnemonicParsing="false" onMouseClicked="#handleButtonAction" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Create Project" />
-                        <Button fx:id="CriticalPathButton" mnemonicParsing="false" onMousePressed="#loadCriticalPathWindow" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Critical Path" GridPane.rowIndex="1" />
+                        <Button fx:id="KotlinButton" mnemonicParsing="false" onMouseReleased="#LoadKotlin" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Kotlin" />
+                        <Button fx:id="ScalaButton" mnemonicParsing="false" onMouseReleased="#LoadScala" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Scala" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
-                  <Label fx:id="lblProjectCount" layoutX="90.0" layoutY="219.0" text="Projects:" textFill="#fbfcfc" />
-                  <Label fx:id="lblName" layoutX="91.0" layoutY="60.0" text="Task Manager V1" textFill="#fbfcfc">
+                  <Label fx:id="lblProjectCount" layoutX="90.0" layoutY="219.0" text="Implementations" textFill="#fbfcfc" />
+                  <Label fx:id="lblName" layoutX="91.0" layoutY="60.0" text="Critical Path" textFill="#fbfcfc">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblGreeting" layoutX="90.0" layoutY="96.0" text="Welcome back to your workspace " textFill="#989aad" />
+                  <Label fx:id="lblGreeting" layoutX="90.0" layoutY="96.0" text="Critical Path Visualization" textFill="#989aad" />
                   <Button fx:id="btnEX" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#closeWindow" prefHeight="24.0" prefWidth="35.0" style="-fx-background-color: #989AAD; -fx-background-radius: 1em;" text="--" textFill="#cdcdcd" />
                </children>
             </Pane>

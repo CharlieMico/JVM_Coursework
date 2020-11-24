@@ -73,7 +73,7 @@ public class TaskItemController implements Initializable {
         lblEmail.setText(model.getEmail());
         lblTlf.setText(model.getTlf());
         lblDeadline.setText(model.getDeadline());
-        lblChildren.setText(String.valueOf(model.getChildren()));
+        lblChildren.setText(model.getChild());
         lblDuration.setText(String.valueOf(model.getDuration()));
 
 

@@ -54,6 +54,9 @@ public class HomeController implements Initializable {
     @FXML
     private VBox vTaskItems;
 
+    @FXML
+    private Button CriticalPathButton;
+
     private ObservableList<ProjectFactory> listOfTasks;
 
     @FXML
@@ -80,83 +83,105 @@ public class HomeController implements Initializable {
         }
     }
 
+    @FXML
+    public void loadCriticalPathWindow(MouseEvent mouseEvent) {
 
-        @Override
-        public void initialize (URL url, ResourceBundle rb){
-            ExecutorService executorService = Executors.newCachedThreadPool();
-            executorService.submit(fetchList);
-
-            fetchList.setOnSucceeded((event) -> {
-
-                listOfTasks = FXCollections.observableArrayList(fetchList.getValue());
-                int size = listOfTasks.size();
-                lblToday.setText("Today(" + size + ")");
-                lblUpcoming.setText("Upcoming(" + 0 + ")");
-
-                try { //load task items to vbox
-                    Node[] nodes = new Node[size];
-                    for (int i = 0; i < nodes.length; i++) {
-                        //load specific item
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource(Constants.FXML_ITEM_TASK));
-                        TaskItemController controller = new TaskItemController();
-                        loader.setController(controller);
-                        nodes[i] = loader.load();
-                        vTaskItems.getChildren().add(nodes[i]);
-                        controller.setTask(listOfTasks.get(i));
-                    }
-
-                    // Optional
-                    for (int i = 0; i < nodes.length; i++) {
-                        try {
-                            nodes[i] = FXMLLoader.load(getClass().getResource(Constants.FXML_ITEM_TASK));
-                            //vTaskItemsupcoming.getChildren().add(nodes[i]);
-                        } catch (Exception e) {
-                        }
-                    }
-                } catch (Exception e) {
-                    System.err.println("Error Creating Tasks...");
-                    System.err.println(e.getMessage());
-                }
-            });
-        }
-
-        public final Task<List<ProjectFactory>> fetchList = new Task() {
-
-            @Override
-            protected List<ProjectFactory> call() throws Exception {
-                List<ProjectFactory> list = null;
-                try {
-
-                    BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-                    System.out.println(url);
-                    list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
-                    }.getType());
-                    System.out.println(list);
+        if (mouseEvent.getSource() == CriticalPathButton) {
+            try {
+                Node node = (Node) mouseEvent.getSource();
+                Stage stage = (Stage) node.getScene().getWindow();
+                stage.close();
+                Scene scene = new Scene(FXMLLoader.load(getClass().getResource(Constants.FXML_Critical_PATH)));
+                stage.setScene(scene);
+                stage.show();
 
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return list;
+            } catch (IOException ex) {
+
+                System.err.println(ex.getMessage());
             }
-
-        };
-
-        private static String readUrl (String urlString) throws Exception {
-
-            @Cleanup
-            BufferedReader reader = null;
-
-            URL url = new URL(urlString);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder buffer = new StringBuilder();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1) {
-                buffer.append(chars, 0, read);
-            }
-
-            return buffer.toString();
         }
 
     }
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.submit(fetchList);
+
+        fetchList.setOnSucceeded((event) -> {
+
+            listOfTasks = FXCollections.observableArrayList(fetchList.getValue());
+            int size = listOfTasks.size();
+            lblToday.setText("Today(" + size + ")");
+            lblUpcoming.setText("Upcoming(" + 0 + ")");
+
+            try { //load task items to vbox
+                Node[] nodes = new Node[size];
+                for (int i = 0; i < nodes.length; i++) {
+                    //load specific item
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource(Constants.FXML_ITEM_TASK));
+                    TaskItemController controller = new TaskItemController();
+                    loader.setController(controller);
+                    nodes[i] = loader.load();
+                    vTaskItems.getChildren().add(nodes[i]);
+                    controller.setTask(listOfTasks.get(i));
+                }
+
+                // Optional
+                for (int i = 0; i < nodes.length; i++) {
+                    try {
+                        nodes[i] = FXMLLoader.load(getClass().getResource(Constants.FXML_ITEM_TASK));
+                        //vTaskItemsupcoming.getChildren().add(nodes[i]);
+                    } catch (Exception e) {
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Error Creating Tasks...");
+                System.err.println(e.getMessage());
+            }
+        });
+    }
+
+    public final Task<List<ProjectFactory>> fetchList = new Task() {
+
+        @Override
+        protected List<ProjectFactory> call() throws Exception {
+            List<ProjectFactory> list = null;
+            try {
+
+                BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
+                System.out.println(url);
+                list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
+                }.getType());
+                //System.out.println(list);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return list;
+        }
+
+    };
+
+    private static String readUrl(String urlString) throws Exception {
+
+        @Cleanup
+        BufferedReader reader = null;
+
+        URL url = new URL(urlString);
+        reader = new BufferedReader(new InputStreamReader(url.openStream()));
+        StringBuilder buffer = new StringBuilder();
+        int read;
+        char[] chars = new char[1024];
+        while ((read = reader.read(chars)) != -1) {
+            buffer.append(chars, 0, read);
+        }
+
+        return buffer.toString();
+    }
+
+
+}
