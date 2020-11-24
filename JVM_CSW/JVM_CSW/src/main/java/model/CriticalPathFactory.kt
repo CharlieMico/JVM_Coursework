@@ -13,5 +13,5 @@ import lombok.ToString
 @Setter
 @NoArgsConstructor
 @ToString
-class CriticalPathFactory(val id : String,val Children: List<String>,val Duration :Float)
+class CriticalPathFactory(val id : String,val children: List<String>, val Duration :Float)
 

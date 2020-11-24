@@ -87,7 +87,7 @@ public class Main extends Application {
 
             BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
             System.out.println(url);
-            list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
+            list = new Gson().fromJson(url, new TypeToken<List<CriticalPathFactory>>() {
             }.getType());
 
 

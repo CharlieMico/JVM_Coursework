@@ -1,6 +1,6 @@
 package critical_path
 
-import model.Task
+import model.CriticalPathFactory
 
 /**
  * The abstract base represntation of a Directional Analytic Graph
@@ -172,7 +172,7 @@ abstract class AbstractDirectionalAnalyticGraph<IDType, TaskType>(val list: List
  *
  * @see AbstractDirectionalAnalyticGraph
  */
-class TaskDAG(list: List<Task>) : AbstractDirectionalAnalyticGraph<String, Task>(list) {
+class TaskDAG(list: List<CriticalPathFactory>) : AbstractDirectionalAnalyticGraph<String, CriticalPathFactory>(list) {
 
     /**
      * Implementation of [AbstractDirectionalAnalyticGraph.taskToId] which wraps around [Task.id]
@@ -181,7 +181,7 @@ class TaskDAG(list: List<Task>) : AbstractDirectionalAnalyticGraph<String, Task>
      *
      * @return [Task.id] or an empty string if task is null
      */
-    override fun taskToId(task: Task?): String {
+    override fun taskToId(task: CriticalPathFactory?): String {
         if(task == null) return ""
         return task.id
     }
@@ -193,7 +193,7 @@ class TaskDAG(list: List<Task>) : AbstractDirectionalAnalyticGraph<String, Task>
      *
      * @return [Task.id]
      */
-    override fun getTaskChildrenIDs(task: Task): List<String> {
+    override fun getTaskChildrenIDs(task: CriticalPathFactory): List<String> {
         return task.children
     }
 
@@ -205,9 +205,9 @@ class TaskDAG(list: List<Task>) : AbstractDirectionalAnalyticGraph<String, Task>
      *
      * @return The duration or 0f if task is null
      */
-    override fun getDuration(task: Task?, recursively: Boolean): Float {
+    override fun getDuration(task: CriticalPathFactory?, recursively: Boolean): Float {
         if(task == null) return 0f
-        var result = task.duration
+        var result = task.Duration
         if(recursively) {
             for (item in task.children)
                 result += getDuration(idToTask(item), recursively)

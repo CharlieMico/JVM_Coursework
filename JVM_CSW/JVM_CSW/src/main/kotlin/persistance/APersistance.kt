@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import model.ProjectFactory
-import model.Task
+import model.CriticalPathFactory
 import java.io.BufferedWriter
 import java.io.FileReader
 import java.io.FileWriter
@@ -51,7 +51,7 @@ abstract class APersistance {
      *
      * @see save
      */
-    abstract fun saveTasks(url: String, data: List<Task>) : Boolean
+    abstract fun saveTasks(url: String, data: List<CriticalPathFactory>) : Boolean
 
     /**
      * Loads specifically tasks from the provided location
@@ -62,7 +62,7 @@ abstract class APersistance {
      *
      * @see load
      */
-    abstract fun loadTasks(url: String) : List<Task>
+    abstract fun loadTasks(url: String) : List<CriticalPathFactory>
 
     /**
      * Saves specifically projects to the provided location
@@ -95,7 +95,7 @@ class FilePersistence() : APersistance() {
     /**
      * A token representing a list of Tasks used to properally encode and decode the json file through GSON
      */
-    private val taskToken : TypeToken<List<Task>> = object: TypeToken<List<Task>>(){}
+    private val taskToken : TypeToken<List<CriticalPathFactory>> = object: TypeToken<List<CriticalPathFactory>>(){}
 
     /**
      * A token representing a list of projects used to properally encode and decode the json file through GSON
@@ -103,7 +103,7 @@ class FilePersistence() : APersistance() {
     private val projectToken : TypeToken<List<ProjectFactory>> = object: TypeToken<List<ProjectFactory>>(){}
 
     /**
-     * Writes the given tasks to the given filepath
+     * Writes the given CriticalPathFactorys to the given filepath
      *
      * @param url The filepath to save this file to
      * @param data The list of tasks to save
@@ -113,7 +113,7 @@ class FilePersistence() : APersistance() {
      * @see taskToken
      * @see writeJson
      */
-    override fun saveTasks(url: String, data: List<Task>) : Boolean = writeJson(url, taskToken, data)
+    override fun saveTasks(url: String, data: List<CriticalPathFactory>) : Boolean = writeJson(url, taskToken, data)
 
     /**
      * Loads the given tasks from the given filepath
@@ -125,7 +125,7 @@ class FilePersistence() : APersistance() {
      * @see taskToken
      * @see readJson
      */
-    override fun loadTasks(url: String) : List<Task> = readJson(url, taskToken) ?: emptyList()
+    override fun loadTasks(url: String) : List<CriticalPathFactory> = readJson(url, taskToken) ?: emptyList()
 
     /**
      * Saves the given projects to the filepath
