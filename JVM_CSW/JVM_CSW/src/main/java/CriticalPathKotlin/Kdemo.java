@@ -1,6 +1,6 @@
 package CriticalPathKotlin;
 
-import Utils.Constants;
+import utils.Constants;
 import critical_path.TaskDAG;
 import javafx.fxml.FXML;
 import model.CriticalPathFactory;

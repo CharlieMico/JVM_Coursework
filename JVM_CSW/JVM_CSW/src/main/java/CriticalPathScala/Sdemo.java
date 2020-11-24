@@ -1,6 +1,6 @@
 package CriticalPathScala;
 
-import Utils.Constants;
+import utils.Constants;
 import critpath.CriticalPath;
 import javafx.fxml.FXML;
 import model.CriticalPathFactory;

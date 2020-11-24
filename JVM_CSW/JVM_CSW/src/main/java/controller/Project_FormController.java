@@ -6,7 +6,7 @@ package controller;
 //import com.mysql.jdbc.PreparedStatement;
 
 import Persistance.Persistance;
-import Utils.Constants;
+import utils.Constants;
 import com.google.gson.Gson;
         import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
@@ -36,7 +36,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static Utils.Constants.*;
+import static utils.Constants.*;
 
 public class Project_FormController implements Initializable {
 

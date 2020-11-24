@@ -2,7 +2,7 @@ package controller;
 
 import CriticalPathKotlin.Kdemo;
 import CriticalPathScala.Sdemo;
-import Utils.Constants;
+import utils.Constants;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
