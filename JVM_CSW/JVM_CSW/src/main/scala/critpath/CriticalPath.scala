@@ -4,6 +4,8 @@ import java.util
 
 /**
  * This object is the point of entry for Java Applications to hook into.
+ *
+ * @author Charlie Mico
  */
 object CriticalPath {
   /**
