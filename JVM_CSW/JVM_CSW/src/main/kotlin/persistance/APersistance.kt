@@ -13,35 +13,179 @@ import kotlin.io.path.Path
 import kotlin.io.path.createFile
 import kotlin.io.path.exists
 
-abstract class APersistance() {
+/**
+ * Abstract class representing the base functionality of saving and loading tasks and projects
+ *
+ * @author Charlie Mico
+ */
+abstract class APersistance {
+    /**
+     * Saves provided to data to provided location
+     *
+     * @param url The location to save the data
+     * @param data The data to save
+     *
+     * @param T The type of the data
+     *
+     * @return True if successful, false otherwise
+     */
     protected abstract fun <T> save(url: String, data: T): Boolean
+
+    /**
+     * Loads data from the provided location
+     *
+     * @param url The location to load data from
+     * @param T The type of the data
+     *
+     * @return The data, or null of the load failed
+     */
     protected abstract fun <T> load(url: String) : T?
+
+    /**
+     * Saves specifically tasks to the provided location.
+     *
+     * @param url The location to save the data
+     * @param data The list of tasks to sace
+     *
+     * @return True if successful, false otherwise
+     *
+     * @see save
+     */
+    abstract fun saveTasks(url: String, data: List<Task>) : Boolean
+
+    /**
+     * Loads specifically tasks from the provided location
+     *
+     * @param url The location to load tasks from
+     *
+     * @return List of tasks, or an empty list if it failed
+     *
+     * @see load
+     */
+    abstract fun loadTasks(url: String) : List<Task>
+
+    /**
+     * Saves specifically projects to the provided location
+     *
+     * @param url The location to save the projects
+     * @param data The list of projects to save
+     *
+     * @return True if successful, false otherwise
+     */
+    abstract fun saveProjects(url: String, data: List<ProjectFactory>) : Boolean
+
+    /**
+     * Loads specifically projects from the provided location
+     *
+     * @param url The location to load the projects from
+     *
+     * @return A list of projects or an empty list if failed
+     */
+    abstract fun loadProjects(url: String) : List<ProjectFactory>
 }
 
 @ExperimentalPathApi
+/**
+ * A specific implementation of APersistance wherein the data is stored as json files.
+ *
+ * @author Charlie Mico
+ */
 class FilePersistence() : APersistance() {
 
+    /**
+     * A token representing a list of Tasks used to properally encode and decode the json file through GSON
+     */
     private val taskToken : TypeToken<List<Task>> = object: TypeToken<List<Task>>(){}
+
+    /**
+     * A token representing a list of projects used to properally encode and decode the json file through GSON
+     */
     private val projectToken : TypeToken<List<ProjectFactory>> = object: TypeToken<List<ProjectFactory>>(){}
 
-    fun saveTasks(file_path: String, data: List<Task>) : Boolean = writeJson(file_path, taskToken, data)
-    fun loadTasks(file_path: String) : List<Task> = readJson(file_path, taskToken) ?: emptyList()
+    /**
+     * Writes the given tasks to the given filepath
+     *
+     * @param url The filepath to save this file to
+     * @param data The list of tasks to save
+     *
+     * @return True is successful, false otherwise
+     *
+     * @see taskToken
+     * @see writeJson
+     */
+    override fun saveTasks(url: String, data: List<Task>) : Boolean = writeJson(url, taskToken, data)
 
-    fun saveProjects(file_path: String, data: List<ProjectFactory>) : Boolean = writeJson(file_path, projectToken, data)
-    fun loadProjects(file_path: String) : List<ProjectFactory> = readJson(file_path, projectToken) ?: emptyList()
+    /**
+     * Loads the given tasks from the given filepath
+     *
+     * @param url The filepath to load the tasks from
+     *
+     * @return A list containing the tasks, or an empty list if it fails
+     *
+     * @see taskToken
+     * @see readJson
+     */
+    override fun loadTasks(url: String) : List<Task> = readJson(url, taskToken) ?: emptyList()
+
+    /**
+     * Saves the given projects to the filepath
+     *
+     * @param url The filepath to save the projects to
+     * @param data The list of projects to save
+     *
+     * @return True is successful, false otherwise
+     *
+     * @see projectToken
+     * @see writeJson
+     */
+    override fun saveProjects(url: String, data: List<ProjectFactory>) : Boolean = writeJson(url, projectToken, data)
+
+    /**
+     * Loads projects from the given filepath
+     *
+     * @param url The filepath to load from
+     *
+     * @return A list containing projects, or an empty if loading failed
+     *
+     * @see projectToken
+     * @see readJson
+     */
+    override fun loadProjects(url: String) : List<ProjectFactory> = readJson(url, projectToken) ?: emptyList()
 
 
-
+    /**
+     * Implementation of [APersistance.save] which wraps the local [writeJson], not recommended to be used
+     *
+     * @see APersistance.save
+     * @see writeJson
+     */
     override fun <T> save(url: String, data: T) : Boolean {
         return writeJson(url,  object: TypeToken<T>(){}, data);
     }
 
+    /**
+     * Implementation of [APersistance.load] which wraps the local [readJson], not recommended to be used
+     *
+     * @see APersistance.load
+     * @see readJson
+     */
     override fun <T> load(url: String) : T? {
         return readJson(url, object: TypeToken<T>(){})
     }
 
 
-    // Actual logic
+    /**
+     * Reads the given token type from the given filepath and returns it. Using Gson
+     *
+     * @param file_path The file to be loaded
+     * @param token The token for encoding and decoding json
+     *
+     * @param T The type to be loaded
+     *
+     * @return The loaded values, or null if fails
+     *
+     * @see Gson
+     */
     private fun <T> readJson(file_path: String, token: TypeToken<T>) : T? {
         val path = Path(file_path)
         if(!path.exists()) return null
@@ -49,6 +193,19 @@ class FilePersistence() : APersistance() {
         return Gson().fromJson(reader, token.type)
     }
 
+    /**
+     * Writes the given token type to the given filepath using Gson
+     *
+     * @param file_path The file to be saves
+     * @param token The token for encoding and decoding json
+     * @param data The data to be written
+     *
+     * @param T The type of the data
+     *
+     * @return True if successful, or false otherwise
+     *
+     * @see Gson
+     */
     private fun <T> writeJson(file_path: String, token: TypeToken<T>, data: T) : Boolean {
         val path = Path(file_path)
         if(!path.exists()) path.createFile()
