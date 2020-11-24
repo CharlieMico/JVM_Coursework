@@ -8,10 +8,7 @@ import model.CriticalPathFactory
 import java.io.BufferedWriter
 import java.io.FileReader
 import java.io.FileWriter
-import kotlin.io.path.ExperimentalPathApi
-import kotlin.io.path.Path
-import kotlin.io.path.createFile
-import kotlin.io.path.exists
+import kotlin.io.path.*
 
 /**
  * Abstract class representing the base functionality of saving and loading tasks and projects
@@ -95,12 +92,17 @@ class FilePersistence() : APersistance() {
     /**
      * A token representing a list of Tasks used to properally encode and decode the json file through GSON
      */
-    private val taskToken : TypeToken<List<CriticalPathFactory>> = object: TypeToken<List<CriticalPathFactory>>(){}
+    private val taskListToken : TypeToken<List<CriticalPathFactory>> = object: TypeToken<List<CriticalPathFactory>>(){}
 
     /**
      * A token representing a list of projects used to properally encode and decode the json file through GSON
      */
-    private val projectToken : TypeToken<List<ProjectFactory>> = object: TypeToken<List<ProjectFactory>>(){}
+    private val projectListToken : TypeToken<List<ProjectFactory>> = object: TypeToken<List<ProjectFactory>>(){}
+
+    /**
+     * A token representing a single project for encoding and decoding the json file through GSON
+     */
+    private val singleProjectToken : TypeToken<ProjectFactory> = object: TypeToken<ProjectFactory>(){}
 
     /**
      * Writes the given CriticalPathFactorys to the given filepath
@@ -110,10 +112,10 @@ class FilePersistence() : APersistance() {
      *
      * @return True is successful, false otherwise
      *
-     * @see taskToken
+     * @see taskListToken
      * @see writeJson
      */
-    override fun saveTasks(url: String, data: List<CriticalPathFactory>) : Boolean = writeJson(url, taskToken, data)
+    override fun saveTasks(url: String, data: List<CriticalPathFactory>) : Boolean = writeJson(url, taskListToken, data)
 
     /**
      * Loads the given tasks from the given filepath
@@ -122,10 +124,10 @@ class FilePersistence() : APersistance() {
      *
      * @return A list containing the tasks, or an empty list if it fails
      *
-     * @see taskToken
+     * @see taskListToken
      * @see readJson
      */
-    override fun loadTasks(url: String) : List<CriticalPathFactory> = readJson(url, taskToken) ?: emptyList()
+    override fun loadTasks(url: String) : List<CriticalPathFactory> = readJson(url, taskListToken) ?: emptyList()
 
     /**
      * Saves the given projects to the filepath
@@ -135,10 +137,10 @@ class FilePersistence() : APersistance() {
      *
      * @return True is successful, false otherwise
      *
-     * @see projectToken
+     * @see projectListToken
      * @see writeJson
      */
-    override fun saveProjects(url: String, data: List<ProjectFactory>) : Boolean = writeJson(url, projectToken, data)
+    override fun saveProjects(url: String, data: List<ProjectFactory>) : Boolean = writeJson(url, projectListToken, data)
 
     /**
      * Loads projects from the given filepath
@@ -147,10 +149,10 @@ class FilePersistence() : APersistance() {
      *
      * @return A list containing projects, or an empty if loading failed
      *
-     * @see projectToken
+     * @see projectListToken
      * @see readJson
      */
-    override fun loadProjects(url: String) : List<ProjectFactory> = readJson(url, projectToken) ?: emptyList()
+    override fun loadProjects(url: String) : List<ProjectFactory> = readJson(url, projectListToken) ?: emptyList()
 
 
     /**
@@ -213,6 +215,24 @@ class FilePersistence() : APersistance() {
         writer.write(Gson().toJson(data))
         writer.flush()
         writer.close()
+        return true
+    }
+
+    fun saveProject(file_path: String, project: ProjectFactory) : Boolean {
+        if(Path(file_path).isWritable())
+            return writeJson(file_path, singleProjectToken, project)
         return false
     }
+
+    fun saveProject(folder_path: String, project: ProjectFactory, task_list: List<CriticalPathFactory>) : Boolean {
+        if(!Path(folder_path).exists()) Path(folder_path).createDirectory()
+        val path = Path(folder_path + "/" + project.id)
+        if(!path.exists()) path.createDirectory()
+        if(!saveTasks("$path\\tasks.json", task_list))
+            println("Couldn't Save ${path.toAbsolutePath()}/tasks.json")   else println("Saved ${path.toAbsolutePath()}/task.json")
+        if(!saveProject("$path\\details.json", project))
+            println("Couldn't save ${path.toAbsolutePath()}/details.json") else println("Saved ${path.toAbsolutePath()}/details.json")
+        return true
+    }
+
 }

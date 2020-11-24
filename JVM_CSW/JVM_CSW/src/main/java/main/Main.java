@@ -7,6 +7,7 @@ package main;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import critpath.CriticalPath;
 import critpath.DAG;
 import javafx.application.Application;
@@ -17,6 +18,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.CriticalPathFactory;
+import model.ProjectFactory;
+import persistance.FilePersistence;
 import scala.Tuple2;
 import scala.collection.immutable.Set;
 import utils.Constants;
@@ -24,9 +27,8 @@ import utils.Constants;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Too
@@ -39,6 +41,33 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        FilePersistence file = new FilePersistence();
+        List<ProjectFactory> plist      = file.loadProjects(Constants.PROJECTS_DATA);
+        List<CriticalPathFactory> tList = file.loadTasks   (Constants.PROJECTS_DATA);
+        Map<String, CriticalPathFactory> taskMap = new HashMap();
+        tList.stream()
+            .filter(Objects::nonNull)
+            .forEach(e -> taskMap.put(e.getId(), e))
+        ;
+
+        plist.stream()
+                .filter(Objects::nonNull)
+                .forEach((ProjectFactory e)  -> {
+                    if(file.saveProject("./src/main/resources/data/test/",
+                            e,
+                            // English translation make a list of all CriticalPathFactory from taskMap where e has it's ID as a child
+                            (List) taskMap.entrySet().stream()
+                                    .map(Map.Entry::getValue)
+                                    .filter((CriticalPathFactory c) -> e.getChildren().contains(c.getId()))
+                                    .collect(Collectors.toCollection(ArrayList::new))))
+                        System.out.println("Success");
+                    else System.out.println("Failure");
+                });
+
+//        if(file.saveProject("./src/main/resources/data/Projects/", plist.get(0), tList))
+//            System.out.println("Success");
+//        else System.out.println("Failure");
 
 //        testScala();
 
