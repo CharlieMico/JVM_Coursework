@@ -97,7 +97,7 @@
                     </rowConstraints>
                      <children>
                         <Button fx:id="CreateProjectBtn" mnemonicParsing="false" onMouseClicked="#handleButtonAction" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Create Project" />
-                        <Button fx:id="ShowAllBtn" mnemonicParsing="false" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Show All " GridPane.rowIndex="1" />
+                        <Button fx:id="CriticalPathButton" mnemonicParsing="false" onMousePressed="#loadCriticalPathWindow" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Critical Path" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <Label fx:id="lblProjectCount" layoutX="90.0" layoutY="219.0" text="Projects:" textFill="#fbfcfc" />

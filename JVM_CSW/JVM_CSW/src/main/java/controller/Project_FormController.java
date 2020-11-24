@@ -1,16 +1,14 @@
 package controller;
 
-import com.google.gson.JsonParser;
 //import org.json.*;
 
 //import com.mysql.jdbc.Connection;
 //import com.mysql.jdbc.PreparedStatement;
 
+import Persistance.Persistance;
 import Utils.Constants;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+        import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -26,17 +24,19 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 //import utils.ConnectionUtil;
 import lombok.Cleanup;
+        import model.ChildrenFactory;
+import model.ChildrenPairFactory;
 import model.ProjectFactory;
+import persistance.APersistance;
+import persistance.FilePersistence;
 
 import java.io.*;
 import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static Utils.Constants.FXML_HOME;
-import static Utils.Constants.PROJECTS_DATA;
+import static Utils.Constants.*;
 
 public class Project_FormController implements Initializable {
 
@@ -92,7 +92,7 @@ public class Project_FormController implements Initializable {
     protected void SaveData(MouseEvent event) {
         //check if not empty
         if (ProjectName.getText().isEmpty() || TeamLeader.getText().isEmpty() || Email.getText().isEmpty()
-                || Deadline.getValue().equals(null)|| PhoneNumberTxt.getText().isEmpty() ||ChildrenTxt.getText().isEmpty()||DurationTxt.getText().isEmpty()){
+                || Deadline.getValue().equals(null) || PhoneNumberTxt.getText().isEmpty() || DurationTxt.getText().isEmpty()) {
             lblGreeting.setTextFill(Color.TOMATO);
             lblGreeting.setText("Enter all details !!");
         } else {
@@ -109,33 +109,37 @@ public class Project_FormController implements Initializable {
         Email.clear();
         Deadline.setValue(null);
         UrgencyLevel.clear();
+        ChildrenTxt.clear();
+        DurationTxt.clear();
     }
 
     private String saveData() {
-        List<ProjectFactory> list = null;
+
+
         try {
             //code to add to json
+            BufferedReader url = new BufferedReader(new FileReader(TRIAL_FILE)); //read Data
+            ChildrenFactory child = new ChildrenFactory(ChildrenTxt.getText()); // Creating the new Child
+
+            ChildrenPairFactory c = new ChildrenPairFactory(this.ChildrenTxt);
+            List<String>children = c.childs();
 
             ProjectFactory factory = new ProjectFactory(ProjectName.getText()
-                    ,true,Email.getText(),PhoneNumberTxt.getText(),TeamLeader.getText()
-                    ,Deadline.getValue().toString(),ProjectName.getText(),ChildrenTxt.getText(),Float.valueOf(DurationTxt.getText()));
-            BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-            list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
+                    , true, Email.getText(), PhoneNumberTxt.getText()
+                    , TeamLeader.getText(), Deadline.getValue().toString(),
+                    ProjectName.getText(), ChildrenTxt.getText(), children,
+                    Float.parseFloat(DurationTxt.getText()));
+
+            List<ProjectFactory> list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
             }.getType());
             list.add(factory);
-            Gson gson = new Gson();
 
-            String json = gson.toJson(list);
+            /*Persistance p = new Persistance();
+            p.saveData(factory,list,url);*/
 
+           APersistance ap = new FilePersistence();//Save Data
+           ap.saveProjects(PROJECTS_DATA,list);
 
-            System.out.println(json);
-
-
-            FileWriter fileWriter = new FileWriter(PROJECTS_DATA);         // writing back to the file
-            fileWriter.write(json);
-            fileWriter.flush();
-
-            Project_FormController p = new Project_FormController();
             clearFields();
             return "Success";
 
@@ -223,7 +227,7 @@ public class Project_FormController implements Initializable {
                 System.out.println(url);
                 list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
                 }.getType());
-                System.out.println(list);
+                //System.out.println(list);
 
 
             } catch (Exception e) {
