@@ -1,13 +1,16 @@
 package controller;
 
+import com.google.gson.JsonParser;
 //import org.json.*;
 
 //import com.mysql.jdbc.Connection;
 //import com.mysql.jdbc.PreparedStatement;
 
-import utils.Constants;
+import Utils.Constants;
 import com.google.gson.Gson;
-        import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -32,8 +35,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static utils.Constants.FXML_HOME;
-import static utils.Constants.PROJECTS_DATA;
+import static Utils.Constants.FXML_HOME;
+import static Utils.Constants.PROJECTS_DATA;
 
 public class Project_FormController implements Initializable {
 
@@ -59,9 +62,6 @@ public class Project_FormController implements Initializable {
     private Button SaveButton;
 
     @FXML
-    private Label lbl_Missing_Info;
-
-    @FXML
     private Button HomeButton;
 
     @FXML
@@ -73,6 +73,15 @@ public class Project_FormController implements Initializable {
     @FXML
     private VBox vTaskItems;
 
+    @FXML
+    private Label lblGreeting;
+
+    @FXML
+    private TextField DurationTxt;
+
+    @FXML
+    private TextField ChildrenTxt;
+
     private ObservableList<ProjectFactory> listOfTasks;
 
 
@@ -82,9 +91,10 @@ public class Project_FormController implements Initializable {
     @FXML
     protected void SaveData(MouseEvent event) {
         //check if not empty
-        if (ProjectName.getText().isEmpty() || TeamLeader.getText().isEmpty() || Email.getText().isEmpty() || Deadline.getValue().equals(null)|| PhoneNumberTxt.getText().isEmpty() ){
-            lbl_Missing_Info.setTextFill(Color.TOMATO);
-            lbl_Missing_Info.setText("Enter all details !!");
+        if (ProjectName.getText().isEmpty() || TeamLeader.getText().isEmpty() || Email.getText().isEmpty()
+                || Deadline.getValue().equals(null)|| PhoneNumberTxt.getText().isEmpty() ||ChildrenTxt.getText().isEmpty()||DurationTxt.getText().isEmpty()){
+            lblGreeting.setTextFill(Color.TOMATO);
+            lblGreeting.setText("Enter all details !!");
         } else {
 
             saveData();
@@ -106,9 +116,12 @@ public class Project_FormController implements Initializable {
         try {
             //code to add to json
 
-            ProjectFactory factory = new ProjectFactory(ProjectName.getText(),true,Email.getText(),PhoneNumberTxt.getText(),TeamLeader.getText(),Deadline.getValue().toString());
+            ProjectFactory factory = new ProjectFactory(ProjectName.getText()
+                    ,true,Email.getText(),PhoneNumberTxt.getText(),TeamLeader.getText()
+                    ,Deadline.getValue().toString(),ProjectName.getText(),ChildrenTxt.getText(),Float.valueOf(DurationTxt.getText()));
             BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-            list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() { }.getType());
+            list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
+            }.getType());
             list.add(factory);
             Gson gson = new Gson();
 
@@ -128,16 +141,12 @@ public class Project_FormController implements Initializable {
 
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-            lbl_Missing_Info.setTextFill(Color.TOMATO);
-            lbl_Missing_Info.setText(ex.getMessage());
+            lblGreeting.setTextFill(Color.TOMATO);
+            lblGreeting.setText(ex.getMessage());
             return "Exception";
         }
     }
 
-  /*  @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }*/
 
     public void ReturnHome(MouseEvent event) {
         if (event.getSource() == HomeButton) {

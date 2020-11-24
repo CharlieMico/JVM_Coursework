@@ -1,13 +1,15 @@
 package critpath
 
 import java.util
+import model.ProjectFactory;
+import model.CriticalPathFactory;
 
 /**
  * This object is the point of entry for Java Applications to hook into.
- *
- * @author Charlie Mico
  */
 object CriticalPath {
+  //TODO: Implement this...
+  // Takes in java list to simplify integration
   /**
    * Finds the critical path of the given network of tasks
    *

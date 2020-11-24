@@ -12,8 +12,6 @@ import scala.collection.immutable.HashMap
  * @param local_map The base map this graph is built on, this is assumed to be correct
  *
  * @tparam NodeType The type of the taskIDs stored in this graph
- *
- * @author Charlie Mico
  */
 class DAG[NodeType](val local_map: HashMap[NodeType, Set[NodeType]]) {
 

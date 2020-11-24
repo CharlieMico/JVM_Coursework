@@ -22,17 +22,30 @@
       <Insets left="10.0" right="12.0" />
    </padding>
    <bottom>
-      <Label fx:id="lblEmail" prefHeight="17.0" prefWidth="130.0" text="Email" BorderPane.alignment="CENTER_LEFT">
-         <padding>
-            <Insets bottom="5.0" left="30.0" />
-         </padding>
+      <BorderPane BorderPane.alignment="CENTER_LEFT">
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
-      </Label>
+         <left>
+            <Label fx:id="lblEmail" prefHeight="17.0" prefWidth="130.0" text="Email" BorderPane.alignment="CENTER">
+               <padding>
+                  <Insets bottom="5.0" left="30.0" />
+               </padding>
+            </Label>
+         </left>
+         <center>
+            <Label fx:id="lblChildren" prefHeight="17.0" prefWidth="130.0" text="Children" BorderPane.alignment="CENTER_LEFT">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="23.0" />
+               </padding></Label>
+         </center>
+      </BorderPane>
    </bottom>
    <top>
-      <BorderPane>
+      <BorderPane prefHeight="17.0" prefWidth="390.0">
          <BorderPane.margin>
             <Insets left="20.0" top="5.0" />
          </BorderPane.margin>
@@ -44,12 +57,18 @@
             </Label>
          </left>
          <center>
-            <Label fx:id="lblDeadline" prefHeight="17.0" prefWidth="130.0" text="Deadline" BorderPane.alignment="CENTER_LEFT" />
+            <Label fx:id="lblDeadline" prefHeight="17.0" prefWidth="130.0" text="Deadline" BorderPane.alignment="CENTER_LEFT">
+               <padding>
+                  <Insets left="3.0" />
+               </padding></Label>
          </center>
+         <right>
+            <Label fx:id="lblDuration" prefHeight="17.0" prefWidth="218.0" text="Duration" BorderPane.alignment="CENTER_LEFT" />
+         </right>
       </BorderPane>
    </top>
    <center>
-      <BorderPane BorderPane.alignment="CENTER_LEFT">
+      <BorderPane prefHeight="17.0" prefWidth="130.0" BorderPane.alignment="CENTER_LEFT">
          <left>
             <Label fx:id="lblTeamLeader" prefHeight="17.0" prefWidth="130.0" text="Team Leader" BorderPane.alignment="CENTER_LEFT">
                <padding>

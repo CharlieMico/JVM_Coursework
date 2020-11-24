@@ -17,7 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import utils.Constants;
+import Utils.Constants;
 
 /**
  * FXML Controller class
@@ -47,6 +47,12 @@ public class TaskItemController implements Initializable {
     @FXML
     private Label lblDeadline;
 
+    @FXML
+    private Label lblChildren;
+
+    @FXML
+    private Label lblDuration;
+
 
     /**
      * Initializes the controller class.
@@ -67,6 +73,8 @@ public class TaskItemController implements Initializable {
         lblEmail.setText(model.getEmail());
         lblTlf.setText(model.getTlf());
         lblDeadline.setText(model.getDeadline());
+        lblChildren.setText(String.valueOf(model.getChildren()));
+        lblDuration.setText(String.valueOf(model.getDuration()));
 
 
         if (model.getStatus()) {

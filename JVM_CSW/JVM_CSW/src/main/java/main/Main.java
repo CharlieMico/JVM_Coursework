@@ -5,7 +5,15 @@
  */
 package main;
 
-import critical_path.TaskDAG;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import critpath.CriticalPath;
 import critpath.DAG;
 import javafx.application.Application;
@@ -15,18 +23,12 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import Utils.Constants;
+
+import model.CriticalPathFactory;
 import model.ProjectFactory;
-import model.Task;
-import persistance.APersistance;
-import persistance.FilePersistence;
 import scala.Tuple2;
 import scala.collection.immutable.Set;
-import utils.Constants;
-
-import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Too
@@ -41,7 +43,6 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
 
         testScala();
-        testKotlin();
 
         URL path = getClass().getResource(Constants.FXML_HOME);
         if (path != null) {
@@ -79,26 +80,32 @@ public class Main extends Application {
 
     }
 
-    /**
-     * Tests the scala implementation before integrating into the core application, loads and then finds the critical
-     * path of<T> the data stored at ./src/main/resources/data/UNQIUE_PROJECT_IDENTIFIER.json relative to the project root.
-     */
     private void testScala() {
         // Load, copyed from HomeController.fetchList
-        System.out.println("Scala Test Start");
-        FilePersistence f = new FilePersistence();
-        List<Task> list = f.loadTasks(Constants.TASK_FOLDER + "/tmpfile.json");
+        List<CriticalPathFactory> list = null;
+        try {
+
+            BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
+            System.out.println(url);
+            list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
+            }.getType());
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // Abandon ship if this data doesn't exist for whatever reason
         if(list != null) {
             // Translating from a single list to the Maps expected by the CriticalPath implementation
             // Any map is valid, HashMaps used primarily for ease of typing due to muscle memory.
-            Map<String, Task> task_map = new HashMap<>();
+            Map<String, CriticalPathFactory> task_map = new HashMap<>();
             Map<String, List<String>> task_relation = new HashMap<>();
             list.forEach(task -> {
                 task_map.put(task.getId(), task);
+
                 task_relation.put(task.getId(), task.getChildren());
             });
-            System.out.println(task_relation);
             // End Translating
 
             // Broken down for ease of reading
@@ -108,10 +115,8 @@ public class Main extends Application {
             criticalPath = CriticalPath.findCriticalPath("task_1",
                     stringDAG,
                     task_map::get,
-                    Task::getDuration
+                    CriticalPathFactory::getDuration
             );
-
-            System.out.println(criticalPath);
 
             // -- MINIMUM LINE FOR SCALA INTEGRATION -- \\
             // List<Tuple2<String, Set<String>>> path = CriticalPath.findCriticalPath("Task 0", CriticalPath.makeDAG(task_relation), (String task_id) -> task_map.get(task_id), (TasksModel m) -> m.getDuration());
@@ -126,32 +131,8 @@ public class Main extends Application {
                 );
                 System.out.println("[END]");
             }
-        } else System.err.println("File not properally loaded");
-        System.out.println("Scala Test End");
-    }
-
-    private void testKotlin() {
-        System.out.println("Kotlin Critical Path Testing START");
-        FilePersistence files = new FilePersistence();
-
-        List<Task> list = files.loadTasks(Constants.TASK_FOLDER + "/tmpfile.json");
-        files.saveTasks(Constants.TASK_FOLDER + "/tmpfile2.json", list);
-
-        List<ProjectFactory> pTmp = files.loadProjects(Constants.PROJECTS_DATA);
-        files.saveProjects(Constants.TASK_FOLDER + "/tmpfile3.json", pTmp);
-
-        List<ProjectFactory> pList = files.loadProjects(Constants.PROJECTS_DATA);
-
-
-        TaskDAG taskDAG = new TaskDAG(list);
-        List<Task> crit_path = taskDAG.findCriticalPath("task_1");
-
-        System.out.print("Start Point: task_1, " + crit_path.size() + " Children: [START]->");
-        for(Task t : crit_path) {
-            System.out.print(t.getId() + "->");
         }
-        System.out.println("[END]");
-
-        System.out.println("Kotlin Critical Path Testing END");
     }
+
+
 }
