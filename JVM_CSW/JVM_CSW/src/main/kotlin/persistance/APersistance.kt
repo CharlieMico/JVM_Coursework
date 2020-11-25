@@ -105,6 +105,11 @@ class FilePersistence() : APersistance() {
     private val singleProjectToken : TypeToken<ProjectFactory> = object: TypeToken<ProjectFactory>(){}
 
     /**
+     * Used to encode/decode a list of Strings
+     */
+    private val stringListToken : TypeToken<List<String>> = object: TypeToken<List<String>>(){}
+
+    /**
      * Writes the given CriticalPathFactorys to the given filepath
      *
      * @param url The filepath to save this file to
@@ -218,12 +223,14 @@ class FilePersistence() : APersistance() {
         return true
     }
 
-    fun saveProject(file_path: String, project: ProjectFactory) : Boolean {
+    //TODO: Rename to better
+    private fun saveProject(file_path: String, project: ProjectFactory) : Boolean {
         if(Path(file_path).isWritable())
             return writeJson(file_path, singleProjectToken, project)
         return false
     }
 
+    //TODO: Create signiture in parent class
     fun saveProject(folder_path: String, project: ProjectFactory, task_list: List<CriticalPathFactory>) : Boolean {
         if(!Path(folder_path).exists()) Path(folder_path).createDirectory()
         val path = Path(folder_path + "/" + project.id)
@@ -233,6 +240,41 @@ class FilePersistence() : APersistance() {
         if(!saveProject("$path\\details.json", project))
             println("Couldn't save ${path.toAbsolutePath()}/details.json") else println("Saved ${path.toAbsolutePath()}/details.json")
         return true
+    }
+
+    /**
+     * Load's a given project from it's directory name.
+     *
+     * @param folder_path The location to load from
+     *
+     * @return A pair of Project and list of Tasks; Project can be null, list of Tasks is empty in this case
+     */
+    //TODO: Create signature in parent class
+    fun loadProject(folder_path: String) : Pair<ProjectFactory?, List<CriticalPathFactory>> {
+        val folder  = Path(folder_path)
+        if(!folder.exists()) return Pair(null, emptyList())
+        val project : ProjectFactory?
+                = readJson(folder_path.plus(folder.fileSystem.separator).plus("details.json"), singleProjectToken)
+        val taskList : List<CriticalPathFactory>
+                = readJson(folder_path.plus(folder.fileSystem.separator).plus("tasks.json"), taskListToken) ?: emptyList()
+        return Pair(project, taskList)
+    }
+
+    // Takes projects and saves their ids to disk
+    fun saveProjectIndex(file_path: String, projects: List<ProjectFactory>) : Boolean {
+        val file  = Path(file_path)
+        if(!file.exists()) file.createDirectory() // TODO: Make a recursive function which can handle creating parents of folder which don't exist
+        val ids : List<String> = projects.map { project -> project.id }
+        return writeJson(file_path, stringListToken, ids)
+    }
+
+
+
+    // Returns the above list of ids
+    fun loadProjectIndex(file_path: String) : List<String> {
+        val file = Path(file_path)
+        if(!file.exists()) return emptyList()
+        return readJson(file_path, stringListToken) ?: emptyList()
     }
 
 }
