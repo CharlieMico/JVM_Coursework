@@ -196,6 +196,7 @@ class FilePersistence() : APersistance() {
      */
     private fun <T> readJson(file_path: String, token: TypeToken<T>) : T? {
         val path = Path(file_path)
+//        println(path)
         if(!path.exists()) return null
         val reader : JsonReader = JsonReader(FileReader(path.toFile()))
         return Gson().fromJson(reader, token.type)
@@ -253,6 +254,7 @@ class FilePersistence() : APersistance() {
     //TODO: Create signature in parent class
     fun loadProject(folder_path: String) : Pair<ProjectFactory?, List<CriticalPathFactory>> {
         val folder  = Path(folder_path)
+//        println(folder)
         if(!folder.exists()) return Pair(null, emptyList())
         val project : ProjectFactory?
                 = readJson(folder_path.plus(folder.fileSystem.separator).plus("details.json"), singleProjectToken)
@@ -276,6 +278,8 @@ class FilePersistence() : APersistance() {
         val file = Path(file_path.plus("project_index.json") )
         if(!file.exists()) makeFile(file) //file.createFile() // TODO: Make a recursive function which can handle creating parents of folder which don't exist
         val ids : List<String> = projects.filter{ p -> p != null }.map { project -> project.id }
+        println(projects)
+        println(ids)
         return writeJson(file.toString(), stringListToken, DataProjectIndex(ids))
     }
 
@@ -283,27 +287,37 @@ class FilePersistence() : APersistance() {
 
     // Returns the above list of ids
     fun loadProjectIndex(file_path: String) : List<String> {
-        val file = Path(file_path)
+        val file = Path(file_path + "project_index.json")
         if(!file.exists()) return emptyList()
-        val a = readJson(file_path, stringListToken)
+        val a = readJson(file_path + "project_index.json", stringListToken)
         if(a != null) return a.data
         return emptyList()
     }
 
     fun loadAllProjects(folder_path: String) : MutableList<Pair<ProjectFactory?, List<CriticalPathFactory>>> {
-        val index : List<String> = loadProjectIndex(folder_path.plus("project_index.json"))
-        println(folder_path.plus("project_index.json"))
+        val index : List<String> = loadProjectIndex(folder_path)
         if(index.isEmpty()) return ArrayList()
 
         index.forEach { e -> println(e) }
 
-        return index
+        val output : ArrayList<Pair<ProjectFactory?, List<CriticalPathFactory>>> = ArrayList()
+
+        index
             .asSequence() // IDE Said this might improve performance
-            .filter { i -> i.isNotEmpty() } // Shouldn't be nessisary
-            .map { i -> loadProject(folder_path.plus(Path(folder_path).fileSystem.separator).plus(i)) }
-            .toMutableList()
-            .toCollection(ArrayList()).toMutableList()
+            .filter  { i -> i.isNotEmpty() } // Shouldn't be nessisary
+            .map     { i -> loadProject(folder_path.plus(Path(folder_path).fileSystem.separator).plus(i)) }
+            .forEach { i -> output.add(i) }
+//            .forEach { i -> println(i) }
+//            .toMutableList()
+//            .toCollection(ArrayList()).toMutableList()
+        return output
     }
+
+    fun saveAllProjects(folder_path: String, data: List<Pair<ProjectFactory?, List<CriticalPathFactory>>>) : Boolean {
+        data.filter { e -> e.first != null }.forEach { e -> saveProject(folder_path, e.first!!, e.second) }
+        return true
+    }
+
 
 }
 

@@ -78,9 +78,10 @@ public class Main extends Application {
 
         // Load
         List<Pair<ProjectFactory, List<CriticalPathFactory>>> projects = file.loadAllProjects(PROJECT_ROOT);
+        System.out.println(projects.size());
 
         // Add manually created data
-        projects.add(new Pair<>(dummy_project, taskDAG.toList()));
+//        projects.add(new Pair<>(dummy_project, taskDAG.toList()));
 
 
         // Displaying contents of projects
@@ -96,12 +97,11 @@ public class Main extends Application {
         // Update project index (so load works)
         List<ProjectFactory> index = new ArrayList<>();
         projects.forEach(e ->index.add(e.component1()));
-        file.saveProjectIndex(PROJECT_ROOT, index);
+        System.out.println(index.size());
 
-        // Save each project back (need conveniance function for this like file.loadAllProjects)
-        projects.stream().filter(e -> e.component1() != null).forEach(
-            e -> file.saveProject(PROJECT_ROOT + e.component1().getId(), e.component1(), e.component2())
-        );
+        // Might want to merge these, as index is derived from projects and logically these should always want to be called together
+        file.saveProjectIndex(PROJECT_ROOT, index);
+        file.saveAllProjects(PROJECT_ROOT, projects);
 
 //        testScala();
 
