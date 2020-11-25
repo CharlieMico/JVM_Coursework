@@ -225,9 +225,9 @@ class FilePersistence() : APersistance() {
 
     //TODO: Rename to better
     private fun saveProject(file_path: String, project: ProjectFactory) : Boolean {
-        if(Path(file_path).isWritable())
+//        if(Path(file_path).isWritable())
             return writeJson(file_path, singleProjectToken, project)
-        return false
+//        return false
     }
 
     //TODO: Create signiture in parent class
@@ -263,7 +263,7 @@ class FilePersistence() : APersistance() {
     // Takes projects and saves their ids to disk
     fun saveProjectIndex(file_path: String, projects: List<ProjectFactory>) : Boolean {
         val file  = Path(file_path)
-        if(!file.exists()) file.createDirectory() // TODO: Make a recursive function which can handle creating parents of folder which don't exist
+        if(!file.exists()) file.createFile() // TODO: Make a recursive function which can handle creating parents of folder which don't exist
         val ids : List<String> = projects.map { project -> project.id }
         return writeJson(file_path, stringListToken, ids)
     }
@@ -275,6 +275,18 @@ class FilePersistence() : APersistance() {
         val file = Path(file_path)
         if(!file.exists()) return emptyList()
         return readJson(file_path, stringListToken) ?: emptyList()
+    }
+
+    fun loadAllProjects(folder_path: String) : List<Pair<ProjectFactory?, List<CriticalPathFactory>>> {
+        val index : List<String> = loadProjectIndex(folder_path.plus("project_index.json"))
+        if(index.isEmpty()) return emptyList()
+
+        return index
+            .asSequence() // IDE Said this might improve performance
+            .filter { i -> i.isNotEmpty() } // Shouldn't be nessisary
+            .map { i -> loadProject(folder_path.plus(Path(folder_path).fileSystem.separator).plus(i)) }
+            .toMutableList()
+            .toCollection(ArrayList()).toList()
     }
 
 }

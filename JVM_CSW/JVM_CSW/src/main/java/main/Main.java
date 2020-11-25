@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import kotlin.Pair;
 import model.CriticalPathFactory;
 import model.ProjectFactory;
 import persistance.FilePersistence;
@@ -42,28 +43,56 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        FilePersistence file = new FilePersistence();
-        List<ProjectFactory> plist      = file.loadProjects(Constants.PROJECTS_DATA);
-        List<CriticalPathFactory> tList = file.loadTasks   (Constants.PROJECTS_DATA);
-        Map<String, CriticalPathFactory> taskMap = new HashMap();
-        tList.stream()
-            .filter(Objects::nonNull)
-            .forEach(e -> taskMap.put(e.getId(), e))
-        ;
+        String FILE_projectIndex = "./src/main/resources/data/project_root/";
 
-        plist.stream()
-                .filter(Objects::nonNull)
-                .forEach((ProjectFactory e)  -> {
-                    if(file.saveProject("./src/main/resources/data/test/",
-                            e,
-                            // English translation make a list of all CriticalPathFactory from taskMap where e has it's ID as a child
-                            (List) taskMap.entrySet().stream()
-                                    .map(Map.Entry::getValue)
-                                    .filter((CriticalPathFactory c) -> e.getChildren().contains(c.getId()))
-                                    .collect(Collectors.toCollection(ArrayList::new))))
-                        System.out.println("Success");
-                    else System.out.println("Failure");
-                });
+        FilePersistence file = new FilePersistence();
+
+        file.loadAllProjects(FILE_projectIndex);
+
+//        ArrayList<ProjectFactory> index = new ArrayList<>();
+//            index.add(new ProjectFactory(
+//                    "SomeProject",
+//                    true,
+//                    "some_email@some_provider.example",
+//                    "01234",
+//                    "Some Leader",
+//                    "2020-02-20",
+//                    "some_id",
+//                    "some_child",
+//                    new ArrayList<>(),
+//                    1f
+//                    ));
+//
+//        file.saveProjectIndex(FILE_projectIndex + "project_index.json", index);
+//
+//        index.forEach(project -> file.saveProject(FILE_projectIndex, project, new ArrayList<>()));
+//
+//        List<String> loadedIndex = file.loadProjectIndex(FILE_projectIndex + "project_index.json");
+//        loadedIndex.stream().map(i -> file.loadProject(FILE_projectIndex + i)).forEach(System.out::println);
+
+//        Pair<ProjectFactory, List<CriticalPathFactory>> loadedPair = file.loadProject(FILE_projectIndex + )
+
+//        List<ProjectFactory> plist      = file.loadProjects(Constants.PROJECTS_DATA);
+//        List<CriticalPathFactory> tList = file.loadTasks   (Constants.PROJECTS_DATA);
+//        Map<String, CriticalPathFactory> taskMap = new HashMap();
+//        tList.stream()
+//            .filter(Objects::nonNull)
+//            .forEach(e -> taskMap.put(e.getId(), e))
+//        ;
+//
+//        plist.stream()
+//                .filter(Objects::nonNull)
+//                .forEach((ProjectFactory e)  -> {
+//                    if(file.saveProject("./src/main/resources/data/test/",
+//                            e,
+//                            // English translation make a list of all CriticalPathFactory from taskMap where e has it's ID as a child
+//                            (List) taskMap.entrySet().stream()
+//                                    .map(Map.Entry::getValue)
+//                                    .filter((CriticalPathFactory c) -> e.getChildren().contains(c.getId()))
+//                                    .collect(Collectors.toCollection(ArrayList::new))))
+//                        System.out.println("Success");
+//                    else System.out.println("Failure");
+//                });
 
 //        if(file.saveProject("./src/main/resources/data/Projects/", plist.get(0), tList))
 //            System.out.println("Success");
