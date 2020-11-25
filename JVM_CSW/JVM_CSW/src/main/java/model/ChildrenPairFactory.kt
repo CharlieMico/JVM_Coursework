@@ -10,6 +10,7 @@ import java.util.*
 class ChildrenPairFactory(@field:FXML private val ChildrenTxt: TextField) {
     fun childs(): List<String> {
         return a(ChildrenTxt.text)
+        //test
 //        val child = ChildrenFactory(ChildrenTxt.text)
 //        val kid = child.Children.replace("\\s*".toRegex(),"")
 //        val items = kid.split(",").toTypedArray() // Split the string kid separated by , and store to array
