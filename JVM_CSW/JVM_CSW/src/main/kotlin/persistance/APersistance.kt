@@ -8,6 +8,7 @@ import model.CriticalPathFactory
 import java.io.BufferedWriter
 import java.io.FileReader
 import java.io.FileWriter
+import java.nio.file.Path
 import kotlin.io.path.*
 
 /**
@@ -107,7 +108,7 @@ class FilePersistence() : APersistance() {
     /**
      * Used to encode/decode a list of Strings
      */
-    private val stringListToken : TypeToken<List<String>> = object: TypeToken<List<String>>(){}
+    private val stringListToken : TypeToken<DataProjectIndex> = object: TypeToken<DataProjectIndex>(){}
 
     /**
      * Writes the given CriticalPathFactorys to the given filepath
@@ -215,7 +216,7 @@ class FilePersistence() : APersistance() {
      */
     private fun <T> writeJson(file_path: String, token: TypeToken<T>, data: T) : Boolean {
         val path = Path(file_path)
-        if(!path.exists()) path.createFile()
+        if(!path.exists()) makeFile(path)//path.createFile()
         val writer : BufferedWriter = BufferedWriter(FileWriter(path.toFile()))
         writer.write(Gson().toJson(data))
         writer.flush()
@@ -232,9 +233,9 @@ class FilePersistence() : APersistance() {
 
     //TODO: Create signiture in parent class
     fun saveProject(folder_path: String, project: ProjectFactory, task_list: List<CriticalPathFactory>) : Boolean {
-        if(!Path(folder_path).exists()) Path(folder_path).createDirectory()
+        if(!Path(folder_path).exists()) makeDirectory(Path(folder_path))//Path(folder_path).createDirectory()
         val path = Path(folder_path + "/" + project.id)
-        if(!path.exists()) path.createDirectory()
+        if(!path.exists()) makeDirectory(path)//path.createDirectory()
         if(!saveTasks("$path\\tasks.json", task_list))
             println("Couldn't Save ${path.toAbsolutePath()}/tasks.json")   else println("Saved ${path.toAbsolutePath()}/task.json")
         if(!saveProject("$path\\details.json", project))
@@ -260,12 +261,22 @@ class FilePersistence() : APersistance() {
         return Pair(project, taskList)
     }
 
+    fun makeDirectory(path: Path) {
+        if(!path.parent.exists()) makeDirectory(path.parent)
+        path.createDirectory()
+    }
+
+    fun makeFile(path: Path) {
+        if(!path.parent.exists()) makeDirectory(path.parent)
+        path.createFile()
+    }
+
     // Takes projects and saves their ids to disk
     fun saveProjectIndex(file_path: String, projects: List<ProjectFactory>) : Boolean {
         val file  = Path(file_path)
-        if(!file.exists()) file.createFile() // TODO: Make a recursive function which can handle creating parents of folder which don't exist
-        val ids : List<String> = projects.map { project -> project.id }
-        return writeJson(file_path, stringListToken, ids)
+        if(!file.exists()) makeFile(file) //file.createFile() // TODO: Make a recursive function which can handle creating parents of folder which don't exist
+        val ids : List<String> = projects.filter{ p -> p != null }.map { project -> project.id }
+        return writeJson(file_path, stringListToken, DataProjectIndex(ids))
     }
 
 
@@ -274,19 +285,26 @@ class FilePersistence() : APersistance() {
     fun loadProjectIndex(file_path: String) : List<String> {
         val file = Path(file_path)
         if(!file.exists()) return emptyList()
-        return readJson(file_path, stringListToken) ?: emptyList()
+        val a = readJson(file_path, stringListToken)
+        if(a != null) return a.data
+        return emptyList()
     }
 
-    fun loadAllProjects(folder_path: String) : List<Pair<ProjectFactory?, List<CriticalPathFactory>>> {
+    fun loadAllProjects(folder_path: String) : MutableList<Pair<ProjectFactory?, List<CriticalPathFactory>>> {
         val index : List<String> = loadProjectIndex(folder_path.plus("project_index.json"))
-        if(index.isEmpty()) return emptyList()
+        println(folder_path.plus("project_index.json"))
+        if(index.isEmpty()) return ArrayList()
+
+        index.forEach { e -> println(e) }
 
         return index
             .asSequence() // IDE Said this might improve performance
             .filter { i -> i.isNotEmpty() } // Shouldn't be nessisary
             .map { i -> loadProject(folder_path.plus(Path(folder_path).fileSystem.separator).plus(i)) }
             .toMutableList()
-            .toCollection(ArrayList()).toList()
+            .toCollection(ArrayList()).toMutableList()
     }
 
 }
+
+private data class DataProjectIndex(val data: List<String>)

@@ -101,6 +101,10 @@ class DAG[NodeType](val local_map: HashMap[NodeType, Set[NodeType]]) {
     print("Start At", deps.slice(0, 1), deps.slice(1, deps.size))
   }
 
+  def toList() : List[NodeType] = {
+    local_map.keys.toList
+  }
+
 }
 
 /**

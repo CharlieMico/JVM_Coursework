@@ -161,6 +161,10 @@ abstract class AbstractDirectionalAnalyticGraph<IDType, TaskType>(val list: List
         return duration + longest
     }
 
+    fun toList() : List<TaskType> {
+        return tasks.entries.map { e -> e.value }
+    }
+
 }
 
 /**

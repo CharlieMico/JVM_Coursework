@@ -195,9 +195,11 @@ public class HomeController implements Initializable {
         Stage stage = (Stage) AnchorPanel.getScene().getWindow();
 
         File file = fileChooser.showOpenDialog(stage);
-        String ChangetoDirectorie = file.getAbsolutePath();
-        Constants.PROJECTS_DATA = ChangetoDirectorie;
-        System.out.println(ChangetoDirectorie);
+        if(file != null) { // File is null if the file selection is canceled by the user
+            String ChangetoDirectorie = file.getAbsolutePath();
+            Constants.PROJECTS_DATA = ChangetoDirectorie;
+            System.out.println(ChangetoDirectorie);
+        }
 
     }
 
