@@ -6,6 +6,7 @@ package controller;
 //import com.mysql.jdbc.PreparedStatement;
 
 import Persistance.Persistance;
+import kotlin.Pair;
 import model.CriticalPathFactory;
 import utils.Constants;
 import com.google.gson.Gson;
@@ -121,72 +122,33 @@ public class Project_FormController implements Initializable {
     }
 
     private String saveData() {
-
-        String FILE_PATH = "./src/main/resources/data/" + ProjectName.getText() + "/" + ProjectName.getText() + ".json";
-        String DIRECTORIE_PATH = "./src/main/resources/data/" + ProjectName.getText() + "/";
-
-
         try {
+        final String PROJECT_ROOT = "./src/main/resources/data/project_root2/";
+        ChildrenPairFactory ch = new ChildrenPairFactory(this.ChildrenTxt);
+        ProjectFactory factory = new ProjectFactory(ProjectName.getText()
+                , StatusTxt.getText(), Email.getText(), PhoneNumberTxt.getText()
+                , TeamLeader.getText(), Deadline.getValue().toString(),
+                IdTxt.getText(), ChildrenTxt.getText(), ch.childs(),
+                Float.parseFloat(DurationTxt.getText()));
+        CriticalPathFactory criticalPathFactory = new CriticalPathFactory(IdTxt.getText(),ch.childs(),Float.parseFloat(DurationTxt.getText()));
+        FilePersistence file = new FilePersistence();
 
-            File directorie = new File(DIRECTORIE_PATH);
-            directorie.mkdir();
-
-           File data = new File(FILE_PATH);
-           data.createNewFile();
-
-
-
-
-           if (data.isFile()& directorie.isDirectory()) {
-
-
-                    BufferedReader url = new BufferedReader(new FileReader(FILE_PATH)); //read Data
-                    ChildrenFactory child = new ChildrenFactory(ChildrenTxt.getText()); // Creating the new Child
-
-                    ChildrenPairFactory ch = new ChildrenPairFactory(this.ChildrenTxt);
-                    List<String> children = ch.childs();
-
-                    ProjectFactory factory = new ProjectFactory(ProjectName.getText()
-                            , StatusTxt.getText(), Email.getText(), PhoneNumberTxt.getText()
-                            , TeamLeader.getText(), Deadline.getValue().toString(),
-                            IdTxt.getText(), ChildrenTxt.getText(), children,
-                            Float.parseFloat(DurationTxt.getText()));
-                    CriticalPathFactory criticalPathFactory = new CriticalPathFactory(IdTxt.getText(),children,Float.parseFloat(DurationTxt.getText()));
-
-                    List<ProjectFactory> list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
-                    }.getType());
-                    list.add(factory);
-
-                    //List<CriticalPathFactory> tlist = new Gson().fromJson(url,new TypeToken<List<CriticalPathFactory>>(){}.getType());
-                   // tlist.add(criticalPathFactory);
-
-
-                        APersistance ap = new FilePersistence();
-                        ap.saveProjects(FILE_PATH,list);
-
-
-
-
-
-
-
-                        System.out.println("Task Created");
-
-
-                   }
-
-
-
-                clearFields();
-                return "Success";
-
-            } catch(Exception ex){
-                System.out.println(ex.getMessage());
-                lblGreeting.setTextFill(Color.TOMATO);
-                lblGreeting.setText(ex.getMessage());
-                return "Exception";
-            }
+        Pair<ProjectFactory, List<CriticalPathFactory>> load_pair = file.loadProject(PROJECT_ROOT + factory.getId());
+        if(load_pair.component1() != null) {
+            load_pair.component2().add(criticalPathFactory);
+            file.saveProject(PROJECT_ROOT, factory, load_pair.component2());
+        } else {
+            file.saveProject(PROJECT_ROOT, factory, Arrays.asList(criticalPathFactory));
         }
+        return "Success";
+
+        } catch(Exception ex){
+            System.out.println(ex.getMessage());
+            lblGreeting.setTextFill(Color.TOMATO);
+            lblGreeting.setText(ex.getMessage());
+            return "Exception";
+        }
+    }
 
 
 

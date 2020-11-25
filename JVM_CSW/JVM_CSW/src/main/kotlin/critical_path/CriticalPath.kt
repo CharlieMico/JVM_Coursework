@@ -128,6 +128,7 @@ abstract class AbstractDirectionalAnalyticGraph<IDType, TaskType>(val list: List
      */
     fun findCriticalPath(startKey: IDType): List<TaskType?> {
         val output_list : MutableSet<TaskType?> = mutableSetOf()
+        if(startKey == null || startKey == "") return emptyList()
         output_list.add(idToTask(startKey))
         val child : TaskType = getTaskChildrenIDs(output_list.elementAt(0)!!).map { item -> idToTask(item) }.maxByOrNull { item -> calcTotalDuration(taskToId(item)) }
             ?: return output_list.toList()
