@@ -53,6 +53,11 @@ public class TaskItemController implements Initializable {
     @FXML
     private Label lblDuration;
 
+   @FXML
+    private Label lblProjectName;
+
+    @FXML Label lblId;
+
 
     /**
      * Initializes the controller class.
@@ -68,21 +73,24 @@ public class TaskItemController implements Initializable {
     public void setTask(ProjectFactory model) {
         ContextMenu menu = new ContextMenu();
         System.out.println(model.toString());
-        lblTaskName.setText(model.getName());
-        lblTeamLeader.setText(model.getTeamLeader());
+        lblTaskName.setText("Project: " + model.getName());
+        lblTeamLeader.setText("Team Leader: " + model.getTeamLeader());
         lblEmail.setText(model.getEmail());
         lblTlf.setText(model.getTlf());
-        lblDeadline.setText(model.getDeadline());
-        lblChildren.setText(model.getChild());
-        lblDuration.setText(String.valueOf(model.getDuration()));
+        lblDeadline.setText("Deadline: " + model.getDeadline());
+        lblChildren.setText("Children: " + model.getChild());
+        lblDuration.setText("Duration: " + String.valueOf(model.getDuration()));
+        lblId.setText("ID: " + model.getId());
+        btnInfo.setText(model.getStatus());
+        //lblProjectName.setText(model.getName());
 
 
-        if (model.getStatus()) {
-            btnInfo.setText("Complete");
+        if (model.getStatus().contains("Done")) {
+           // btnInfo.setText("Complete");
             iconSelect.setImage(new Image(getClass().getResourceAsStream(Constants.ICON_CHECK_FILL)));
             menu.getItems().add(new MenuItem("Set Task InComplete"));
         } else {
-            btnInfo.setText("InComplete");
+            //btnInfo.setText("InComplete");
             iconSelect.setImage(new Image(getClass().getResourceAsStream(Constants.ICON_CHECK_UNFILL)));
             menu.getItems().add(new MenuItem("Set Task Complete"));
         }

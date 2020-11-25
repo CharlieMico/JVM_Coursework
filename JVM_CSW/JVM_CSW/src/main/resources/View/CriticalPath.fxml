@@ -95,10 +95,12 @@
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <Button fx:id="KotlinButton" mnemonicParsing="false" onMouseReleased="#LoadKotlin" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Kotlin" />
                         <Button fx:id="ScalaButton" mnemonicParsing="false" onMouseReleased="#LoadScala" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Scala" GridPane.rowIndex="1" />
+                        <Button fx:id="HomeButton1" mnemonicParsing="false" onMouseReleased="#ReturnHome" prefHeight="60.0" prefWidth="270.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Home" GridPane.rowIndex="2" />
                      </children>
                   </GridPane>
                   <Label fx:id="lblProjectCount" layoutX="90.0" layoutY="219.0" text="Implementations" textFill="#fbfcfc" />

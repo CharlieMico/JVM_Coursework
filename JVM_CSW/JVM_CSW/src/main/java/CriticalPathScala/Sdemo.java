@@ -45,13 +45,7 @@ public class Sdemo {
 
         for (Tuple2<String, Set<String>> item : criticalPath) {
 
-           /* CriticalPathArea.setText("Start Point: " + item._1 + "," + item._2.size() + "Children: [START]->"+item._1+"->");
-            item._2.foreach((e)->{
-                CriticalPathArea.setText(e + "->");
-                return e;
-                    }
 
-                    );*/
 
             System.out.print("Start Point: " + item._1 + ", " + item._2.size() + " Children: [START]->" + item._1 + "->");
             item._2.foreach((e) -> {
@@ -60,7 +54,7 @@ public class Sdemo {
                     }
             );
             System.out.println("[END]");
-            //CriticalPathArea.setText("[END]");
+
         }
         System.out.println("Scala Demo End");
     }

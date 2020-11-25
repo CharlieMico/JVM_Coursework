@@ -6,6 +6,7 @@ package controller;
 //import com.mysql.jdbc.PreparedStatement;
 
 import Persistance.Persistance;
+import model.CriticalPathFactory;
 import utils.Constants;
 import com.google.gson.Gson;
         import com.google.gson.reflect.TypeToken;
@@ -35,6 +36,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import static utils.Constants.*;
 
@@ -50,7 +52,7 @@ public class Project_FormController implements Initializable {
     private TextField Email;
 
     @FXML
-    private TextField UrgencyLevel;
+    private TextField StatusTxt;
 
     @FXML
     private TextField PhoneNumberTxt;
@@ -82,6 +84,9 @@ public class Project_FormController implements Initializable {
     @FXML
     private TextField ChildrenTxt;
 
+    @FXML
+    private TextField IdTxt;
+
     private ObservableList<ProjectFactory> listOfTasks;
 
 
@@ -108,48 +113,81 @@ public class Project_FormController implements Initializable {
         PhoneNumberTxt.clear();
         Email.clear();
         Deadline.setValue(null);
-        UrgencyLevel.clear();
+        StatusTxt.clear();
         ChildrenTxt.clear();
         DurationTxt.clear();
+        IdTxt.clear();
+
     }
 
     private String saveData() {
 
+        String FILE_PATH = "./src/main/resources/data/" + ProjectName.getText() + "/" + ProjectName.getText() + ".json";
+        String DIRECTORIE_PATH = "./src/main/resources/data/" + ProjectName.getText() + "/";
+
 
         try {
-            //code to add to json
-            BufferedReader url = new BufferedReader(new FileReader(TRIAL_FILE)); //read Data
-            ChildrenFactory child = new ChildrenFactory(ChildrenTxt.getText()); // Creating the new Child
 
-            ChildrenPairFactory c = new ChildrenPairFactory(this.ChildrenTxt);
-            List<String>children = c.childs();
+            File directorie = new File(DIRECTORIE_PATH);
+            directorie.mkdir();
 
-            ProjectFactory factory = new ProjectFactory(ProjectName.getText()
-                    , true, Email.getText(), PhoneNumberTxt.getText()
-                    , TeamLeader.getText(), Deadline.getValue().toString(),
-                    ProjectName.getText(), ChildrenTxt.getText(), children,
-                    Float.parseFloat(DurationTxt.getText()));
+           File data = new File(FILE_PATH);
+           data.createNewFile();
 
-            List<ProjectFactory> list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
-            }.getType());
-            list.add(factory);
 
-            /*Persistance p = new Persistance();
-            p.saveData(factory,list,url);*/
 
-           APersistance ap = new FilePersistence();//Save Data
-           ap.saveProjects(PROJECTS_DATA,list);
 
-            clearFields();
-            return "Success";
+           if (data.isFile()& directorie.isDirectory()) {
 
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-            lblGreeting.setTextFill(Color.TOMATO);
-            lblGreeting.setText(ex.getMessage());
-            return "Exception";
+
+                    BufferedReader url = new BufferedReader(new FileReader(FILE_PATH)); //read Data
+                    ChildrenFactory child = new ChildrenFactory(ChildrenTxt.getText()); // Creating the new Child
+
+                    ChildrenPairFactory ch = new ChildrenPairFactory(this.ChildrenTxt);
+                    List<String> children = ch.childs();
+
+                    ProjectFactory factory = new ProjectFactory(ProjectName.getText()
+                            , StatusTxt.getText(), Email.getText(), PhoneNumberTxt.getText()
+                            , TeamLeader.getText(), Deadline.getValue().toString(),
+                            IdTxt.getText(), ChildrenTxt.getText(), children,
+                            Float.parseFloat(DurationTxt.getText()));
+                    CriticalPathFactory criticalPathFactory = new CriticalPathFactory(IdTxt.getText(),children,Float.parseFloat(DurationTxt.getText()));
+
+                    List<ProjectFactory> list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
+                    }.getType());
+                    list.add(factory);
+
+                    //List<CriticalPathFactory> tlist = new Gson().fromJson(url,new TypeToken<List<CriticalPathFactory>>(){}.getType());
+                   // tlist.add(criticalPathFactory);
+
+
+                        APersistance ap = new FilePersistence();
+                        ap.saveProjects(FILE_PATH,list);
+
+
+
+
+
+
+
+                        System.out.println("Task Created");
+
+
+                   }
+
+
+
+                clearFields();
+                return "Success";
+
+            } catch(Exception ex){
+                System.out.println(ex.getMessage());
+                lblGreeting.setTextFill(Color.TOMATO);
+                lblGreeting.setText(ex.getMessage());
+                return "Exception";
+            }
         }
-    }
+
 
 
     public void ReturnHome(MouseEvent event) {
@@ -224,7 +262,7 @@ public class Project_FormController implements Initializable {
             try {
 
                 BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-                System.out.println(url);
+                //System.out.println(url);
                 list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
                 }.getType());
                 //System.out.println(list);

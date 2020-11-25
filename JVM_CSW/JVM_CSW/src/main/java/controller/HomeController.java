@@ -5,13 +5,14 @@
  */
 package controller;
 
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import model.ProjectFactory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 
 import java.util.List;
@@ -36,9 +37,6 @@ import lombok.Cleanup;
 import utils.Constants;
 
 
-import java.io.FileReader;
-
-
 public class HomeController implements Initializable {
 
     @FXML
@@ -46,7 +44,7 @@ public class HomeController implements Initializable {
 
 
     @FXML
-    private Label lblToday;
+    private Label lblProjectName;
 
     @FXML
     private Label lblUpcoming;
@@ -56,6 +54,12 @@ public class HomeController implements Initializable {
 
     @FXML
     private Button CriticalPathButton;
+
+    @FXML
+    private AnchorPane AnchorPanel;
+
+    @FXML
+    private Button RefreshBtn;
 
     private ObservableList<ProjectFactory> listOfTasks;
 
@@ -114,7 +118,7 @@ public class HomeController implements Initializable {
 
             listOfTasks = FXCollections.observableArrayList(fetchList.getValue());
             int size = listOfTasks.size();
-            lblToday.setText("Today(" + size + ")");
+            lblProjectName.setText("Projects: (" + size + ")");
             lblUpcoming.setText("Upcoming(" + 0 + ")");
 
             try { //load task items to vbox
@@ -152,7 +156,7 @@ public class HomeController implements Initializable {
             try {
 
                 BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-                System.out.println(url);
+                //System.out.println(url);
                 list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
                 }.getType());
                 //System.out.println(list);
@@ -182,6 +186,37 @@ public class HomeController implements Initializable {
 
         return buffer.toString();
     }
+    @FXML
+    public void ChangeDirectorie(MouseEvent mouseEvent) {
+
+        final DirectoryChooser directoryChooser = new DirectoryChooser();
+        final FileChooser fileChooser = new FileChooser();
+
+        Stage stage = (Stage) AnchorPanel.getScene().getWindow();
+
+        File file = fileChooser.showOpenDialog(stage);
+        String ChangetoDirectorie = file.getAbsolutePath();
+        Constants.PROJECTS_DATA = ChangetoDirectorie;
+        System.out.println(ChangetoDirectorie);
+
+    }
+
+    @FXML
+    public void RefreshPage(MouseEvent mouseEvent) {
+        if (mouseEvent.getSource() == RefreshBtn) {
+            try {
+                Node node = (Node) mouseEvent.getSource();
+                Stage stage = (Stage) node.getScene().getWindow();
+                stage.close();
+                Scene scene = new Scene(FXMLLoader.load(getClass().getResource(Constants.FXML_HOME)));
+                stage.setScene(scene);
+                stage.show();
 
 
+            } catch (IOException ex) {
+
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
 }

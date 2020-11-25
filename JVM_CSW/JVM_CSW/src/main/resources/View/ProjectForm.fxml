@@ -93,6 +93,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="50.199951171875" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="50.199951171875" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="50.199951171875" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
@@ -100,16 +101,17 @@
                         <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="79.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="SaveButton" mnemonicParsing="false" onMouseClicked="#SaveData" prefHeight="57.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Save" GridPane.rowIndex="8" />
+                        <Button fx:id="SaveButton" mnemonicParsing="false" onMouseClicked="#SaveData" prefHeight="57.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Save" GridPane.rowIndex="9" />
                         <TextField fx:id="ProjectName" alignment="CENTER" prefHeight="25.0" prefWidth="372.0" promptText="Project Name" />
-                        <TextField fx:id="TeamLeader" alignment="CENTER" promptText="Team Leader" GridPane.rowIndex="1" />
-                        <TextField fx:id="Email" alignment="CENTER" promptText="Team Leader Email" GridPane.rowIndex="2" />
-                        <TextField fx:id="UrgencyLevel" alignment="CENTER" promptText="Urgency Level" GridPane.rowIndex="4" />
-                        <DatePicker fx:id="Deadline" prefHeight="25.0" prefWidth="373.0" promptText="                                             Deadline" GridPane.rowIndex="5" />
-                        <Button fx:id="HomeButton" mnemonicParsing="false" onMouseClicked="#ReturnHome" prefHeight="57.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Home" GridPane.rowIndex="9" />
-                        <TextField fx:id="PhoneNumberTxt" alignment="CENTER" promptText="Phone Number " GridPane.rowIndex="3" />
-                        <TextField fx:id="DurationTxt" alignment="CENTER" promptText="Duration" GridPane.rowIndex="6" />
-                        <TextField fx:id="ChildrenTxt" alignment="CENTER" promptText="Children" GridPane.rowIndex="7" />
+                        <TextField fx:id="TeamLeader" alignment="CENTER" promptText="Team Leader" GridPane.rowIndex="2" />
+                        <TextField fx:id="Email" alignment="CENTER" promptText="Team Leader Email" GridPane.rowIndex="3" />
+                        <TextField fx:id="StatusTxt" alignment="CENTER" promptText="Status" GridPane.rowIndex="5" />
+                        <DatePicker fx:id="Deadline" prefHeight="25.0" prefWidth="373.0" promptText="                                             Deadline" GridPane.rowIndex="6" />
+                        <Button fx:id="HomeButton" mnemonicParsing="false" onMouseClicked="#ReturnHome" prefHeight="57.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Home" GridPane.rowIndex="10" />
+                        <TextField fx:id="PhoneNumberTxt" alignment="CENTER" promptText="Phone Number " GridPane.rowIndex="4" />
+                        <TextField fx:id="DurationTxt" alignment="CENTER" promptText="Duration" GridPane.rowIndex="7" />
+                        <TextField fx:id="ChildrenTxt" alignment="CENTER" promptText="Children" GridPane.rowIndex="8" />
+                        <TextField fx:id="IdTxt" alignment="CENTER" promptText="Project ID" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <Label fx:id="lblName" layoutX="70.0" layoutY="27.0" prefHeight="36.0" prefWidth="198.0" text="Project Creation" textFill="#fbfcfc">

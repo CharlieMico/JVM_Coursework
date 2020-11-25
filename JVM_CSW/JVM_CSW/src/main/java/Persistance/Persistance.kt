@@ -18,7 +18,7 @@ class Persistance {
         list.add(factory)
         val json = gson.toJson(list)
         println(json)
-        val fileWriter = FileWriter(Constants.TRIAL_FILE) // writing back to the file
+        val fileWriter = FileWriter(Constants.PROJECTS_DATA) // writing back to the file
         fileWriter.write(json)
         fileWriter.flush()
     }
