@@ -96,7 +96,7 @@ public class Main extends Application {
         // Update project index (so load works)
         List<ProjectFactory> index = new ArrayList<>();
         projects.forEach(e ->index.add(e.component1()));
-        file.saveProjectIndex(PROJECT_ROOT + "project_index.json", index);
+        file.saveProjectIndex(PROJECT_ROOT, index);
 
         // Save each project back (need conveniance function for this like file.loadAllProjects)
         projects.stream().filter(e -> e.component1() != null).forEach(

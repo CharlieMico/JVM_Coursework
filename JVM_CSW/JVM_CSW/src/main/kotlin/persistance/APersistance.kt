@@ -273,10 +273,10 @@ class FilePersistence() : APersistance() {
 
     // Takes projects and saves their ids to disk
     fun saveProjectIndex(file_path: String, projects: List<ProjectFactory>) : Boolean {
-        val file  = Path(file_path)
+        val file = Path(file_path.plus("project_index.json") )
         if(!file.exists()) makeFile(file) //file.createFile() // TODO: Make a recursive function which can handle creating parents of folder which don't exist
         val ids : List<String> = projects.filter{ p -> p != null }.map { project -> project.id }
-        return writeJson(file_path, stringListToken, DataProjectIndex(ids))
+        return writeJson(file.toString(), stringListToken, DataProjectIndex(ids))
     }
 
 
