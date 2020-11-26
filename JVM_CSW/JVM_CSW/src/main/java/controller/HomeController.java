@@ -8,7 +8,6 @@ package controller;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import kotlin.Pair;
 import model.CriticalPathFactory;
 import model.ProjectFactory;
 import com.google.gson.Gson;
@@ -17,12 +16,10 @@ import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.net.URL;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,10 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Cleanup;
-import persistance.FilePersistence;
 import utils.Constants;
-
-import static utils.Constants.PROJECTS_DATA;
 
 
 public class HomeController implements Initializable {
@@ -68,7 +62,7 @@ public class HomeController implements Initializable {
     @FXML
     private Button RefreshBtn;
 
-    private ObservableList<ProjectFactory> listOfTasks;
+    private ObservableList<CriticalPathFactory> listOfTasks;
 
     @FXML
     private void closeWindow(MouseEvent event) {
@@ -155,23 +149,17 @@ public class HomeController implements Initializable {
         });
     }
 
-    public final Task<List<ProjectFactory>> fetchList = new Task() {
+    public final Task<List<CriticalPathFactory>> fetchList = new Task() {
 
         @Override
-        protected List<ProjectFactory> call() throws Exception {
-            List<ProjectFactory> list = null;
+        protected List<CriticalPathFactory> call() throws Exception {
+            List<CriticalPathFactory> list = null;
             try {
 
-                final String PROJECT_ROOT = PROJECTS_DATA.equals("") ? "./src/main/resources/data/project_root2/" : PROJECTS_DATA;
-                FilePersistence file = new FilePersistence();
-                List<Pair<ProjectFactory, List<CriticalPathFactory>>> pairs;
-                if(PROJECT_ROOT.endsWith(".json"))
-                    pairs = file.loadAllProjectsFromIndex(PROJECT_ROOT);
-                else if(new File(PROJECT_ROOT).isDirectory())
-                    pairs = file.loadAllProjects(PROJECT_ROOT);
-                else pairs = new ArrayList<>();
-                list = pairs.stream().map(Pair::component1).collect(Collectors.toList());
-                System.out.println("Testing");
+                BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
+                //System.out.println(url);
+                list = new Gson().fromJson(url, new TypeToken<List<CriticalPathFactory>>() {
+                }.getType());
                 //System.out.println(list);
 
 
@@ -202,17 +190,16 @@ public class HomeController implements Initializable {
     @FXML
     public void ChangeDirectorie(MouseEvent mouseEvent) {
 
-        final DirectoryChooser directoryChooser = new DirectoryChooser();
-        final FileChooser fileChooser = new FileChooser();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("./src/main/resources/data/"));
 
         Stage stage = (Stage) AnchorPanel.getScene().getWindow();
 
         File file = fileChooser.showOpenDialog(stage);
-        if(file != null) { // File is null if the file selection is canceled by the user
-            String ChangetoDirectorie = file.getAbsolutePath();
-            Constants.PROJECTS_DATA = ChangetoDirectorie;
-            System.out.println(ChangetoDirectorie);
-        }
+        String ChangetoDirectorie = file.getAbsolutePath();
+        Constants.PROJECTS_DATA = ChangetoDirectorie;
+        System.out.println(ChangetoDirectorie);
 
     }
 

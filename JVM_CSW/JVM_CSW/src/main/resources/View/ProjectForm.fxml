@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="594.0" prefWidth="1049.0" style="-fx-background-radius: 1em;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Project_FormController">
+<AnchorPane id="AnchorPane" fx:id="AnchorPanel" prefHeight="594.0" prefWidth="1049.0" style="-fx-background-radius: 1em;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Project_FormController">
    <children>
       <BorderPane prefHeight="594.0" prefWidth="1049.0" style="-fx-background-color: #474C5F; -fx-background-radius: 1em;">
          <center>
@@ -83,43 +83,47 @@
          <left>
             <Pane prefHeight="509.0" prefWidth="497.0" BorderPane.alignment="CENTER">
                <children>
-                  <GridPane alignment="CENTER" layoutX="49.0" layoutY="138.0" prefHeight="424.0" prefWidth="373.0">
+                  <GridPane alignment="CENTER" layoutX="49.0" layoutY="45.0" prefHeight="540.0" prefWidth="374.0">
                     <columnConstraints>
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="424.20001220703125" minWidth="10.0" prefWidth="297.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="50.199951171875" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="50.199951171875" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="50.199951171875" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="79.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="79.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.59999084472656" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="33.0" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="44.600006103515625" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="49.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="48.79998779296875" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="50.199951171875" minHeight="17.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="50.199951171875" minHeight="17.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="51.800018310546875" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="91.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="85.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="98.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="89.79998779296875" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="SaveButton" mnemonicParsing="false" onMouseClicked="#SaveData" prefHeight="57.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Save" GridPane.rowIndex="9" />
-                        <TextField fx:id="ProjectName" alignment="CENTER" prefHeight="25.0" prefWidth="372.0" promptText="Project Name" />
-                        <TextField fx:id="TeamLeader" alignment="CENTER" promptText="Team Leader" GridPane.rowIndex="2" />
+                        <Button fx:id="SaveButton" mnemonicParsing="false" onMouseClicked="#SaveData" prefHeight="50.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Save" GridPane.rowIndex="9" />
+                        <TextField fx:id="ProjectName" alignment="CENTER" prefHeight="17.0" prefWidth="360.0" promptText="Project Name" />
+                        <TextField fx:id="TeamLeader" alignment="CENTER" prefHeight="17.0" promptText="Team Leader" GridPane.rowIndex="2" />
                         <TextField fx:id="Email" alignment="CENTER" promptText="Team Leader Email" GridPane.rowIndex="3" />
                         <TextField fx:id="StatusTxt" alignment="CENTER" promptText="Status" GridPane.rowIndex="5" />
-                        <DatePicker fx:id="Deadline" prefHeight="25.0" prefWidth="373.0" promptText="                                             Deadline" GridPane.rowIndex="6" />
-                        <Button fx:id="HomeButton" mnemonicParsing="false" onMouseClicked="#ReturnHome" prefHeight="57.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Home" GridPane.rowIndex="10" />
+                        <DatePicker fx:id="Deadline" prefHeight="17.0" prefWidth="373.0" promptText="                                             Deadline" GridPane.rowIndex="6" />
+                        <Button fx:id="HomeButton" mnemonicParsing="false" onMouseClicked="#ReturnHome" prefHeight="50.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Home" GridPane.rowIndex="10" />
                         <TextField fx:id="PhoneNumberTxt" alignment="CENTER" promptText="Phone Number " GridPane.rowIndex="4" />
-                        <TextField fx:id="DurationTxt" alignment="CENTER" promptText="Duration" GridPane.rowIndex="7" />
-                        <TextField fx:id="ChildrenTxt" alignment="CENTER" promptText="Children" GridPane.rowIndex="8" />
-                        <TextField fx:id="IdTxt" alignment="CENTER" promptText="Project ID" GridPane.rowIndex="1" />
+                        <TextField fx:id="DurationTxt" alignment="CENTER" prefHeight="17.0" promptText="Duration" GridPane.rowIndex="7" />
+                        <TextField fx:id="ChildrenTxt" alignment="CENTER" prefHeight="17.0" promptText="Children" GridPane.rowIndex="8" />
+                        <TextField fx:id="IdTxt" alignment="CENTER" prefHeight="17.0" promptText="Project ID" GridPane.rowIndex="1" />
+                        <Button fx:id="ChangeProject" layoutX="16.0" layoutY="333.0" mnemonicParsing="false" onMouseClicked="#ChangeDirectorie" prefHeight="50.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Change Project" GridPane.rowIndex="11" />
+                        <Button fx:id="RefreshBtn" layoutX="17.0" layoutY="408.0" mnemonicParsing="false" onMouseClicked="#RefreshPage" prefHeight="50.0" prefWidth="361.0" styleClass="button3" stylesheets="@../styles/fullpackstyling.css" text="Refresh" GridPane.rowIndex="12" />
                      </children>
                   </GridPane>
-                  <Label fx:id="lblName" layoutX="70.0" layoutY="27.0" prefHeight="36.0" prefWidth="198.0" text="Project Creation" textFill="#fbfcfc">
+                  <Label fx:id="lblName" layoutX="49.0" layoutY="9.0" prefHeight="36.0" prefWidth="198.0" text="Project Creation" textFill="#fbfcfc">
                      <font>
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblGreeting" layoutX="70.0" layoutY="63.0" prefHeight="33.0" prefWidth="188.0" text="Welcome back to your workspace " textFill="#989aad" />
+                  <Label fx:id="lblGreeting" layoutX="278.0" layoutY="11.0" prefHeight="33.0" prefWidth="188.0" text="Welcome back to your workspace " textFill="#989aad" />
                   <Button fx:id="btnEX" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#closeWindow" prefHeight="24.0" prefWidth="35.0" style="-fx-background-color: #989AAD; -fx-background-radius: 1em;" text="--" textFill="#cdcdcd" />
                </children>
             </Pane>
