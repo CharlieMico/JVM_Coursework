@@ -1,11 +1,9 @@
 package controller;
 
-import CriticalPathKotlin.Kdemo;
-import CriticalPathScala.Sdemo;
 import critical_path.TaskDAG;
 import critpath.CriticalPath;
+import critpath.DAG;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import model.CriticalPathFactory;
 import persistance.FilePersistence;
@@ -28,20 +26,16 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.ProjectFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+import java.util.stream.Collectors;
 
 
 /**
@@ -104,64 +98,67 @@ public class CriticalPathController implements Initializable {
         Map<String, List<String>> task_relation = new HashMap<>();
         task_list.forEach(task -> {
             task_map.put(task.getId(), task);
-
-            task_relation.put(task.getId(), task.getChildren());
+            task_relation.put(task.getId(), task.getChildren().stream().filter(childID -> !childID.equals("")).collect(Collectors.toList()));
         });
 
+        DAG<String> dag = CriticalPath.makeDAG(task_relation);
+
         List<Tuple2<String, Set<String>>> criticalPath = CriticalPath.findCriticalPath("task_1",
-                CriticalPath.makeDAG(task_relation),
+                dag,
                 task_map::get,
                 CriticalPathFactory::getDuration);
 
-        for (Tuple2<String, Set<String>> item : criticalPath) {
+        List<CriticalPathFactory> path = new ArrayList<>();
+        path.add(task_map.get(criticalPath.get(0)._1()));
+        criticalPath.get(0)._2().foreach(e -> path.add(task_map.get(e)));
+        float total_duration = CriticalPath.get_total_duration("task_1", dag, task_map::get, CriticalPathFactory::getDuration);
+//        path.stream().map(e -> task_map.get(e).getDuration()).;
 
+        displayCriticalPath("task_1", path, total_duration);
+    }
 
-
-
-
-            System.out.print("Start Point: " + item._1 + ", " + item._2.size() + " Children: [START]->" + item._1 + "->");
-            CriticalPathArea.setText(CriticalPathArea.getText()+"\n"+item._1 + ", " + String.valueOf(item._2.size()) +
-                    " Children: [START]-> " + item._1 + "->" );
-            item._2.foreach((e) -> {
-                        System.out.print(e + "->");
-                CriticalPathArea.setText(CriticalPathArea.getText() + e + "->");
-                        return e;
-                    }
-            );
-            System.out.println("[END]");
-            CriticalPathArea.setText(CriticalPathArea.getText() + "\n" + "[END]" + "\n" + "Scala Demo End");
-
+    private void displayCriticalPath(String startPoint, List<CriticalPathFactory> path, float totalDuration) {
+        StringBuilder builder = new StringBuilder();
+        final String NEW_LINE = "\n";
+        final String TAB = "\t";
+        if(path.size() < 1) {
+            CriticalPathArea.setText("No Elements, so unable to calculate critical path. Please add some tasks");
+            return;
         }
-        System.out.println("Scala Demo End");
 
+        builder
+                .append("Critical Path from ")
+                .append(startPoint)
+                .append(" total duration ")
+                .append(totalDuration)
+                .append(":")
+                .append(NEW_LINE);
 
+        path.forEach(e ->
+                builder .append(TAB)
+                        .append("Name: ")
+                        .append(e.getId())
+                        .append(", Duration: ")
+                        .append(e.getDuration())
+                        .append(e.getChildren())
+                        .append(NEW_LINE));
 
+        System.out.println("Test");
+        CriticalPathArea.setText(builder.toString());
     }
 
     @FXML
     public void LoadKotlin(MouseEvent mouseEvent) {
 
-        System.out.println("Kotlin Demo Start");
-        CriticalPathArea.clear();
-        CriticalPathArea.setText("Kotlin Demo Start");
         List<CriticalPathFactory> task_list = new FilePersistence().loadTasks(Constants.PROJECTS_DATA);
 
         //List<ProjectFactory> project_list   = new FilePersistence().loadProjects(Constants.PROJECTS_DATA);
 
         TaskDAG graph = new TaskDAG(task_list);
 
-        List<CriticalPathFactory> path = graph.findCriticalPath("task_1");
-        CriticalPathArea.setText(CriticalPathArea.getText() + "Start Point: task_1, "+ "\n" + String.valueOf(path.size() + " Children: [START]->") );
-
-
-        System.out.print("Start Point: task_1, " + path.size() + " Children: [START]->");
-        for (CriticalPathFactory node : path) {
-            CriticalPathArea.setText(CriticalPathArea.getText() + node.getId() + "->");
-            System.out.print(node.getId() + "->");
-        }
-        System.out.println("[END]");
-        CriticalPathArea.setText(CriticalPathArea.getText()+"\n"+"[END]"+"\n"+"Kotlin Demo End");
-        System.out.println("Kotlin Demo End");
+        final String start_point = "task_1";//graph.toList().get(0).getId();
+        graph.toList().stream().map(e -> e.getId() + ":" + graph.calcTotalDuration(e.getId())).forEach(System.out::println);
+        displayCriticalPath(start_point, graph.findCriticalPath(start_point), graph.calcTotalDuration(start_point));
     }
 
     @Override

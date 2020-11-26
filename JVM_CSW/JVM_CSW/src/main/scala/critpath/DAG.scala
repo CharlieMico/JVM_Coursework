@@ -57,9 +57,10 @@ class DAG[NodeType](val local_map: HashMap[NodeType, Set[NodeType]]) {
    * @return A new graph containing the new item in addition to the old graph data
    */
   def extend(item: NodeType, children: Set[NodeType]) : DAG[NodeType] = {
-    require(item != null)
-    require(children != null)
+//    require(item != null)
+//    require(children != null)
     // For logical consistency, add the dependencies to the existing ones
+    if(item == "") return new DAG[NodeType](local_map)
     val tmp_dep = local_map.getOrElse(item, Set()) ++ children
     new DAG[NodeType](local_map.updated(item, tmp_dep))
   }

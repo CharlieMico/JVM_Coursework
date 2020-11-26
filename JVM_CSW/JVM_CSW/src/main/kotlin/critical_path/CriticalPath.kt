@@ -143,22 +143,37 @@ abstract class AbstractDirectionalAnalyticGraph<IDType, TaskType>(val list: List
      *
      * @return The total duration from the start node
      */
-    private fun calcTotalDuration(key: IDType) : Float {
+    fun calcTotalDuration(key: IDType) : Float {
+        println("test")
         if(!tasks.containsKey(key)) return 0f
+        println(" test2")
         var duration = duration_cache.getOrDefault(key, 0f);
+        println(" test3")
         if(duration != 0f) return duration
+        println(" test4")
         val children : List<IDType> = getTaskChildrenIDs(idToTask(key)!!).toList()
+        println(" test5")
         var longest = Float.MIN_VALUE
+        println("test6")
         var r : IDType? = null
+        println(" test7")
         for (item in children) {
-            val d = calcTotalDuration(item)
+            println(" test8-$item")
+            val d = getDuration(idToTask(item))
+            println(" test9-$d")
             if(d >= longest) {
+                println(" test10")
                 r = item
+                println(" test11-$r")
                 longest = d
+                println(" test12-$longest")
             }
+            println(" test13")
         }
         if(r == null) return 0f
+        println(" test14")
         duration_cache.put(r, longest)
+        println(" test15-${duration_cache[r]}")
         return duration + longest
     }
 

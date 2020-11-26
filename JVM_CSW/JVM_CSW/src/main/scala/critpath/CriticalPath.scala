@@ -103,4 +103,20 @@ object CriticalPath {
     fromJavaList(map, DAG.empty, map.keySet().iterator())
   }
 
+  /**
+   * Gets the sum of each the task and child paths
+   *
+   * @param task The task to start from
+   *
+   * @return The total duration of the tasks given or zero if tasks is null
+   */
+  def get_total_duration[T, Q](task: T, taskIDNetwork: DAG[T], idToTaskMap: Function[T, Q], taskToDuration: Function[Q, Float]) : Float = {
+    if(task == null) 0
+    else {
+      Set[T](task).map(
+        e => taskToDuration(idToTaskMap(e)) + taskIDNetwork.getChildren(e).map(a => get_total_duration(a, taskIDNetwork, idToTaskMap, taskToDuration)).sum
+      ).sum
+    }
+  }
+
 }

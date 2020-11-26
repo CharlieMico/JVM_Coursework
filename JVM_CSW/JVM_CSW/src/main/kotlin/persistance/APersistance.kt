@@ -234,7 +234,7 @@ class FilePersistence() : APersistance() {
 
     //TODO: Create signiture in parent class
     fun saveProject(folder_path: String, project: ProjectFactory, task_list: List<CriticalPathFactory>) : Boolean {
-        val path : Path = Path(folder_path)
+        val path = Path(folder_path)
         if(!path.exists()) makeDirectory(path)//Path(folder_path).createDirectory()
 //        val path = Path(folder_path + "/" + project.id)
 //        if(!path.exists()) makeDirectory(path)//path.createDirectory()
