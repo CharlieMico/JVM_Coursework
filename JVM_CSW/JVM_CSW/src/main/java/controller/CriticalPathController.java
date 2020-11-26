@@ -111,7 +111,7 @@ public class CriticalPathController implements Initializable {
         List<CriticalPathFactory> path = new ArrayList<>();
         path.add(task_map.get(criticalPath.get(0)._1()));
         criticalPath.get(0)._2().foreach(e -> path.add(task_map.get(e)));
-        float total_duration = CriticalPath.get_total_duration("task_1", dag, task_map::get, CriticalPathFactory::getDuration);
+        float total_duration = CriticalPath.getCriticalPathDuration(path, (e) -> ((CriticalPathFactory)e).getDuration());
 //        path.stream().map(e -> task_map.get(e).getDuration()).;
 
         displayCriticalPath("task_1", path, total_duration);
