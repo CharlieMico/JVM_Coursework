@@ -225,7 +225,12 @@ public class Project_FormController implements Initializable {
 
                 final String PROJECT_ROOT = "./src/main/resources/data/project_root2/";
                 FilePersistence file = new FilePersistence();
-                List<Pair<ProjectFactory, List<CriticalPathFactory>>> pairs = file.loadAllProjects(PROJECT_ROOT);
+                List<Pair<ProjectFactory, List<CriticalPathFactory>>> pairs;
+                if(PROJECTS_DATA.endsWith(".json"))
+                    pairs = file.loadAllProjectsFromIndex(PROJECTS_DATA);
+                else if(new File(PROJECTS_DATA).isDirectory())
+                    pairs = file.loadAllProjects(PROJECTS_DATA);
+                else pairs = new ArrayList<>();
                 list = pairs.stream().map(Pair::component1).collect(Collectors.toList());
                 System.out.println("Testing");
 

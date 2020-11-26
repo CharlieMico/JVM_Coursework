@@ -7,8 +7,6 @@ package main;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-import critical_path.TaskDAG;
 import critpath.CriticalPath;
 import critpath.DAG;
 import javafx.application.Application;
@@ -18,11 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import kotlin.Pair;
-import model.ChildrenPairFactory;
 import model.CriticalPathFactory;
-import model.ProjectFactory;
-import persistance.FilePersistence;
 import scala.Tuple2;
 import scala.collection.immutable.Set;
 import utils.Constants;
@@ -30,12 +24,9 @@ import utils.Constants;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.URL;
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import data.UltimateTest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Too

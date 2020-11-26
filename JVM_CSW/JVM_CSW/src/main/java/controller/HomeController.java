@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.net.URL;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -39,6 +40,8 @@ import javafx.stage.Stage;
 import lombok.Cleanup;
 import persistance.FilePersistence;
 import utils.Constants;
+
+import static utils.Constants.PROJECTS_DATA;
 
 
 public class HomeController implements Initializable {
@@ -159,9 +162,14 @@ public class HomeController implements Initializable {
             List<ProjectFactory> list = null;
             try {
 
-                final String PROJECT_ROOT = "./src/main/resources/data/project_root2/";
+                final String PROJECT_ROOT = PROJECTS_DATA.equals("") ? "./src/main/resources/data/project_root2/" : PROJECTS_DATA;
                 FilePersistence file = new FilePersistence();
-                List<Pair<ProjectFactory, List<CriticalPathFactory>>> pairs = file.loadAllProjects(PROJECT_ROOT);
+                List<Pair<ProjectFactory, List<CriticalPathFactory>>> pairs;
+                if(PROJECT_ROOT.endsWith(".json"))
+                    pairs = file.loadAllProjectsFromIndex(PROJECT_ROOT);
+                else if(new File(PROJECT_ROOT).isDirectory())
+                    pairs = file.loadAllProjects(PROJECT_ROOT);
+                else pairs = new ArrayList<>();
                 list = pairs.stream().map(Pair::component1).collect(Collectors.toList());
                 System.out.println("Testing");
                 //System.out.println(list);

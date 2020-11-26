@@ -13,7 +13,7 @@ public class Constants {
     public static String FXML_ITEM_TASK = "/View/TaskItem.fxml";
     public static String ICON_CHECK_UNFILL = "/icons/icons8_checked_filled_24px.png";
     public static String ICON_CHECK_FILL = "/icons/icons8_checked_filled_24px_1.png";
-    public static String PROJECTS_DATA = "./src/main/resources/data/projects_Data.json";
+    public static String PROJECTS_DATA = "";//"./src/main/resources/data/projects_Data.json";
     public static String APP_TITLE = "JFX Task Manager";
     public static String TRIAL_FILE = "./src/main/resources/Projects/projects_Data.json";
     public static String FXML_Critical_PATH = "/View/CriticalPath.fxml";

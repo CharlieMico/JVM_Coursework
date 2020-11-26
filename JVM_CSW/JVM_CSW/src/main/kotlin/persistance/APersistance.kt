@@ -276,7 +276,7 @@ class FilePersistence() : APersistance() {
     // Takes projects and saves their ids to disk
     fun saveProjectIndex(file_path: String, projects: List<ProjectFactory>) : Boolean {
         val file = Path(file_path.plus("project_index.json") )
-        if(!file.exists()) makeFile(file) //file.createFile() // TODO: Make a recursive function which can handle creating parents of folder which don't exist
+        if(!file.exists()) makeFile(file) //file.createFile()
         val ids : List<String> = projects.filter{ p -> p != null }.map { project -> project.id }
         println(projects)
         println(ids)
@@ -307,9 +307,6 @@ class FilePersistence() : APersistance() {
             .filter  { i -> i.isNotEmpty() } // Shouldn't be nessisary
             .map     { i -> loadProject(folder_path.plus(Path(folder_path).fileSystem.separator).plus(i)) }
             .forEach { i -> output.add(i) }
-//            .forEach { i -> println(i) }
-//            .toMutableList()
-//            .toCollection(ArrayList()).toMutableList()
         return output
     }
 
@@ -319,6 +316,9 @@ class FilePersistence() : APersistance() {
         return true
     }
 
+    fun loadAllProjectsFromIndex(file_path: String) : MutableList<Pair<ProjectFactory?, List<CriticalPathFactory>>> {
+        return loadAllProjects(Path(file_path).parent.toString())
+    }
 
 }
 
