@@ -8,6 +8,7 @@ package controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import model.CriticalPathFactory;
 import model.ProjectFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -70,7 +71,7 @@ public class TaskItemController implements Initializable {
         // TODO
     }
 
-    public void setTask(ProjectFactory model) {
+    public void setTask(CriticalPathFactory model) {
         ContextMenu menu = new ContextMenu();
         System.out.println(model.toString());
         lblTaskName.setText("Project: " + model.getName());

@@ -6,11 +6,18 @@ package controller;
 //import com.mysql.jdbc.PreparedStatement;
 
 import Persistance.Persistance;
+import critical_path.TaskDAG;
+import critpath.CriticalPath;
+import critpath.DAG;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import kotlin.Function;
 import kotlin.Pair;
 import model.CriticalPathFactory;
 import utils.Constants;
 import com.google.gson.Gson;
-        import com.google.gson.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -26,7 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 //import utils.ConnectionUtil;
 import lombok.Cleanup;
-        import model.ChildrenFactory;
+import model.ChildrenFactory;
 import model.ChildrenPairFactory;
 import model.ProjectFactory;
 import persistance.APersistance;
@@ -88,7 +95,16 @@ public class Project_FormController implements Initializable {
     @FXML
     private TextField IdTxt;
 
-    private ObservableList<ProjectFactory> listOfTasks;
+    @FXML
+    private Button RefreshBtn;
+
+    @FXML
+    private Button ChangeProject;
+
+    @FXML
+    private AnchorPane AnchorPanel;
+
+    private ObservableList<CriticalPathFactory> listOfTasks;
 
 
     public Project_FormController() {
@@ -122,34 +138,50 @@ public class Project_FormController implements Initializable {
     }
 
     private String saveData() {
+        String DIRECTORIE_PATH = "./src/main/resources/data/" + ProjectName.getText() ;
+
         try {
-        final String PROJECT_ROOT = "./src/main/resources/data/project_root2/";
-        ChildrenPairFactory ch = new ChildrenPairFactory(this.ChildrenTxt);
-        ProjectFactory factory = new ProjectFactory(ProjectName.getText()
-                , StatusTxt.getText(), Email.getText(), PhoneNumberTxt.getText()
-                , TeamLeader.getText(), Deadline.getValue().toString(),
-                IdTxt.getText(), ChildrenTxt.getText(), ch.childs(),
-                Float.parseFloat(DurationTxt.getText()));
-        CriticalPathFactory criticalPathFactory = new CriticalPathFactory(IdTxt.getText(),ch.childs(),Float.parseFloat(DurationTxt.getText()));
-        FilePersistence file = new FilePersistence();
+            //final String PROJECT_ROOT = "./src/main/resources/data/project_root2/";
+            ChildrenPairFactory ch = new ChildrenPairFactory(this.ChildrenTxt);
+            ProjectFactory factory = new ProjectFactory(ProjectName.getText()
+                    , StatusTxt.getText(), Email.getText(), PhoneNumberTxt.getText()
+                    , TeamLeader.getText(), Deadline.getValue().toString(),
+                    IdTxt.getText(), ChildrenTxt.getText(), ch.childs(),
+                    Float.parseFloat(DurationTxt.getText()));
 
-        Pair<ProjectFactory, List<CriticalPathFactory>> load_pair = file.loadProject(PROJECT_ROOT + factory.getId());
-        if(load_pair.component1() != null) {
-            load_pair.component2().add(criticalPathFactory);
-            file.saveProject(PROJECT_ROOT, factory, load_pair.component2());
-        } else {
-            file.saveProject(PROJECT_ROOT, factory, Arrays.asList(criticalPathFactory));
-        }
-        return "Success";
+            CriticalPathFactory criticalPathFactory = new CriticalPathFactory(ProjectName.getText()
+                    , StatusTxt.getText(), Email.getText(), PhoneNumberTxt.getText()
+                    , TeamLeader.getText(), Deadline.getValue().toString(),
+                    IdTxt.getText(), ChildrenTxt.getText(), ch.childs(),
+                    Float.parseFloat(DurationTxt.getText()));
 
+            FilePersistence file = new FilePersistence();
+            Pair<ProjectFactory, List<CriticalPathFactory>> load_pair = file.loadProject(DIRECTORIE_PATH);
+
+            if(load_pair.component1() != null) {
+
+                List<CriticalPathFactory> list = new ArrayList<>();
+                list.addAll(load_pair.component2());
+                list.add(criticalPathFactory);
+                file.saveProject(DIRECTORIE_PATH, factory, list);
+
+            } else {
+                file.saveProject(DIRECTORIE_PATH, factory, Arrays.asList(criticalPathFactory));
+            }
+            clearFields();
+            return "Success";
         } catch(Exception ex){
             System.out.println(ex.getMessage());
             lblGreeting.setTextFill(Color.TOMATO);
             lblGreeting.setText(ex.getMessage());
             return "Exception";
         }
-    }
 
+
+
+
+
+    }
 
 
     public void ReturnHome(MouseEvent event) {
@@ -216,28 +248,17 @@ public class Project_FormController implements Initializable {
         });
     }
 
-    public final Task<List<ProjectFactory>> fetchList = new Task() {
+    public final Task<List<CriticalPathFactory>> fetchList = new Task() {
 
         @Override
-        protected List<ProjectFactory> call() throws Exception {
-            List<ProjectFactory> list = null;
+        protected List<CriticalPathFactory> call() throws Exception {
+            List<CriticalPathFactory> list = null;
             try {
 
-                final String PROJECT_ROOT = "./src/main/resources/data/project_root2/";
-                FilePersistence file = new FilePersistence();
-                List<Pair<ProjectFactory, List<CriticalPathFactory>>> pairs;
-                if(PROJECTS_DATA.endsWith(".json"))
-                    pairs = file.loadAllProjectsFromIndex(PROJECTS_DATA);
-                else if(new File(PROJECTS_DATA).isDirectory())
-                    pairs = file.loadAllProjects(PROJECTS_DATA);
-                else pairs = new ArrayList<>();
-                list = pairs.stream().map(Pair::component1).collect(Collectors.toList());
-                System.out.println("Testing");
-
-//                BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-//                //System.out.println(url);
-//                list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
-//                }.getType());
+                BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
+                //System.out.println(url);
+                list = new Gson().fromJson(url, new TypeToken<CriticalPathFactory>() {
+                }.getType());
                 //System.out.println(list);
 
 
@@ -266,5 +287,37 @@ public class Project_FormController implements Initializable {
         return buffer.toString();
     }
 
+    @FXML
+    public void RefreshPage(MouseEvent mouseEvent) {
+        if (mouseEvent.getSource() == RefreshBtn) {
+            try {
+                Node node = (Node) mouseEvent.getSource();
+                Stage stage = (Stage) node.getScene().getWindow();
+                stage.close();
+                Scene scene = new Scene(FXMLLoader.load(getClass().getResource(FXML_PROJECT_FORM)));
+                stage.setScene(scene);
+                stage.show();
+
+
+            } catch (IOException ex) {
+
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void ChangeDirectorie(MouseEvent mouseEvent) {
+
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File("./src/main/resources/data/"));
+
+        Stage stage = (Stage) AnchorPanel.getScene().getWindow();
+
+        File file = fileChooser.showOpenDialog(stage);
+        String ChangetoDirectorie = file.getAbsolutePath();
+        Constants.PROJECTS_DATA = ChangetoDirectorie;
+        System.out.println(ChangetoDirectorie);
+    }
 }
 
