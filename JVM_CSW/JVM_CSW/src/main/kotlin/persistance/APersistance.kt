@@ -234,9 +234,10 @@ class FilePersistence() : APersistance() {
 
     //TODO: Create signiture in parent class
     fun saveProject(folder_path: String, project: ProjectFactory, task_list: List<CriticalPathFactory>) : Boolean {
-        if(!Path(folder_path).exists()) makeDirectory(Path(folder_path))//Path(folder_path).createDirectory()
-        val path = Path(folder_path + "/" + project.id)
-        if(!path.exists()) makeDirectory(path)//path.createDirectory()
+        val path : Path = Path(folder_path)
+        if(!path.exists()) makeDirectory(path)//Path(folder_path).createDirectory()
+//        val path = Path(folder_path + "/" + project.id)
+//        if(!path.exists()) makeDirectory(path)//path.createDirectory()
         if(!saveTasks("$path\\tasks.json", task_list))
             println("Couldn't Save ${path.toAbsolutePath()}/tasks.json")   else println("Saved ${path.toAbsolutePath()}/task.json")
         if(!saveProject("$path\\details.json", project))
