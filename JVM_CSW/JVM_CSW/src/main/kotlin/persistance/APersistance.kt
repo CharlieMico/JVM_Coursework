@@ -315,6 +315,7 @@ class FilePersistence() : APersistance() {
 
     fun saveAllProjects(folder_path: String, data: List<Pair<ProjectFactory?, List<CriticalPathFactory>>>) : Boolean {
         data.filter { e -> e.first != null }.forEach { e -> saveProject(folder_path, e.first!!, e.second) }
+        saveProjectIndex(folder_path, data.filter {e -> e.first != null }.map { e -> e.first!! })
         return true
     }
 

@@ -223,10 +223,16 @@ public class Project_FormController implements Initializable {
             List<ProjectFactory> list = null;
             try {
 
-                BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-                //System.out.println(url);
-                list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
-                }.getType());
+                final String PROJECT_ROOT = "./src/main/resources/data/project_root2/";
+                FilePersistence file = new FilePersistence();
+                List<Pair<ProjectFactory, List<CriticalPathFactory>>> pairs = file.loadAllProjects(PROJECT_ROOT);
+                list = pairs.stream().map(Pair::component1).collect(Collectors.toList());
+                System.out.println("Testing");
+
+//                BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
+//                //System.out.println(url);
+//                list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
+//                }.getType());
                 //System.out.println(list);
 
 

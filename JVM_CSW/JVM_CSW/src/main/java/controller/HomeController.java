@@ -8,6 +8,8 @@ package controller;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import kotlin.Pair;
+import model.CriticalPathFactory;
 import model.ProjectFactory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,6 +37,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Cleanup;
+import persistance.FilePersistence;
 import utils.Constants;
 
 
@@ -155,10 +159,11 @@ public class HomeController implements Initializable {
             List<ProjectFactory> list = null;
             try {
 
-                BufferedReader url = new BufferedReader(new FileReader(Constants.PROJECTS_DATA));
-                //System.out.println(url);
-                list = new Gson().fromJson(url, new TypeToken<List<ProjectFactory>>() {
-                }.getType());
+                final String PROJECT_ROOT = "./src/main/resources/data/project_root2/";
+                FilePersistence file = new FilePersistence();
+                List<Pair<ProjectFactory, List<CriticalPathFactory>>> pairs = file.loadAllProjects(PROJECT_ROOT);
+                list = pairs.stream().map(Pair::component1).collect(Collectors.toList());
+                System.out.println("Testing");
                 //System.out.println(list);
 
 

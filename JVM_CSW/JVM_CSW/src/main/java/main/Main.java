@@ -49,7 +49,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        System.out.println(UltimateTest.INSTANCE.a(""));
+//        System.out.println(UltimateTest.INSTANCE.a(""));
 
 
 //        System.out.println("Test");
